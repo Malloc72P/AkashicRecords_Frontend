@@ -1,0 +1,23 @@
+img.imageTest{
+    max-width	:	100%;
+}
+div.imageTestWrapper{
+    width: 100%;
+}
+input#id_reg_btn_profileImgUploader {
+    border: 1px solid #d5d5d5;
+    margin-left: 0px;
+    position: relative;
+    top: 10px;
+    left: -22px;
+    border: 1px solid #d5d5d5;
+    margin-left: 12px;
+}
+div.regThumbWrapper {
+    width: 128px;
+    height: 128px;
+    overflow: hidden;
+    border: 1px solid #cfcfcf;
+    border-radius: 50%;
+    display: inline-block;
+}

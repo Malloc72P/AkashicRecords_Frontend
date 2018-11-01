@@ -1,0 +1,9 @@
+
+    .popup-content {
+        border: 0px solid rgb(187, 187, 187) !important;
+        padding: 0px !important;
+    }
+    .popup-closer{
+        width: 6% !important;
+        display: inline-block !important;
+    }
