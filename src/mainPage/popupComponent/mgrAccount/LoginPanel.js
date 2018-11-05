@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Popup from "reactjs-popup";
 import './../popupOverrider.css';
+import axios    from    "axios";
 
 
 class LoginPanel extends Component{
@@ -11,10 +12,11 @@ class LoginPanel extends Component{
             email       :   "",
             password    :   ""
         }//state init
-        this.setEmail   =   this.setEmail.bind(this);
-        this.setPassword   =   this.setPassword.bind(this);
+        this.setEmail           =   this.setEmail.bind(this);
+        this.setPassword        =   this.setPassword.bind(this);
+        this.setSidebarMode     =   this.setSidebarMode.bind(this);
     }
-
+    
     setEmail(e){
         console.log("LoginPanel.setEmail >>> e : ",e.target.value);
         this.setState({
@@ -27,6 +29,47 @@ class LoginPanel extends Component{
             password   :   e.target.value
         })
     }
+
+    setSidebarMode(loginChecker, adminChecker){
+        console.log("LoginPanel.setSidebarMode >>> 메서드 호출됨");
+        console.log("loginChecker : ",loginChecker);
+        console.log("adminChecker : ",adminChecker);
+        var mode = "normal";
+
+        if(loginChecker === "true"){
+            mode    =   "user";
+            if(adminChecker === "true"){
+                mode    =   "admin";
+            }
+        }
+        else{
+            mode    =   "normal";
+        }
+        
+        this.props.setSidebarMode(mode);
+    }
+
+    submitLoginData = (close) => {
+        axios.get("http://localhost:8090/AkashicRecords/hello/loginProc.do",{
+            params:{
+                email       :   this.state.email
+                ,password   :   this.state.password
+            }
+        })
+        .then( (response)=>{
+           console.log("response : ",response);
+            
+            this.setSidebarMode(response.data.loginChecker, response.data.adminCheck);
+            this.props.toggleSidebar();
+            close();
+        })
+        .catch(function(error){
+            console.log("error : ",error);
+            alert("로그인에 실패했습니다.");
+            this.props.toggleSidebar();
+        })
+    }
+    
     
     render(){
         const fontStyle={
@@ -44,7 +87,7 @@ class LoginPanel extends Component{
                             <hr className="w3-black"></hr>
                         </div>
                         
-                        <form className="w3-container" name="login_form" method="post" action="loginProc.do" >
+                        <form className="w3-container" name="login_form" method="post" action="loginProc.do">
                             <br></br>
                             <label  style={fontStyle}>E-mail</label>
                             <label className="  errMsg" style={fontStyle}>___이메일을 입력하십시오</label>
@@ -59,7 +102,8 @@ class LoginPanel extends Component{
                                                                                                         onChange={this.setPassword}></input>
                             <br></br>
                             <input className="w3-btn  btnMargin btnBorderBottom"
-                                type ="submit" name="bt_submit"  value="로그인"></input>
+                                type ="button" name="bt_submit"  value="로그인"
+                                onClick={()=>this.submitLoginData(close)}></input>
                                 
                             <input className="w3-btn  btnBorderBottom"
                                 type ="button" name="bt_goBack"  onClick={close} value="뒤로가기"></input>
