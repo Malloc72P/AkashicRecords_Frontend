@@ -72,13 +72,13 @@ class MyPagePanel extends Component{
                         </div>
                         
                         <form className="w3-container" name="login_form" method="post" action="loginProc.do" >
-                            <label class="" style={fontStyle}>프로필 이미지</label>
+                            <label className="" style={fontStyle}>프로필 이미지</label>
                             <br></br>
-                            <div class="regThumbWrapper" >
+                            <div className="regThumbWrapper" >
                                 <img alt="" id="id_img_regThumb" src="" style={{width: 128, height: 128}}></img>
                                 <input type="hidden" value="-1"></input>
                             </div>
-                            <input class="w3-btn btnMargin btnBorderBottom profileImgBtn" 
+                            <input className="w3-btn btnMargin btnBorderBottom profileImgBtn" 
                                 type="button" name="reg_btn_submit" value="수정"></input>
                             <br></br>
                             <label  style={fontStyle}>E-mail</label>

@@ -5,27 +5,50 @@ import './mainStyle/css_preset.css';
 import './mainStyle/main_mediaSet.css';
 import './mainStyle/myStyle.css';
 import './mainStyle/subSection.css';
-
+import axios    from    "axios";
 class MainPage extends Component {
   constructor(props){
 	super(props);
 	this.state	=	{
-		sidebar:	{
-			openerStat 	: 'none',
-			sidebarMode	:	'normal',
-			sidebarModeList	:	[ "admin", "user", "normal" ]
-		}
+		//###사이드바 오프너 상태
+		sidebar_openerStat 	: 'none',
+		sidebar_sidebarMode	:	'normal',
+		sidebar_sidebarModeList	:	[ "admin", "user", "normal" ],
+		
+		//###로그인 체크 상태
+		login_loginChecker	:	'false',
+		login_adminChecker	:	'false',
+		login_user_email		:	''
 	};//state
 	console.log(this.state);
 	this.toggleSidebar	=	this.toggleSidebar.bind(this);
 	this.setSidebarMode	=	this.setSidebarMode.bind(this);
   }
-
-  toggleSidebar(){
+  componentDidMount(){
+		console.log("MainPage.componentDidMount >>> 메서드 호출됨");
+		console.log("ssnId : "+localStorage.ssnId);
+		axios.get("http://localhost:8090/AkashicRecords/hello/mainPageProc.do",{
+			params : {
+				ssnId   :   localStorage.ssnId
+			}
+		})
+		.then( (response)=>{
+			console.log("response : ",response);
+			this.setSidebarMode(response.data.loginChecker, response.data.adminChecker);
+		})
+		.catch(function(error){
+			console.log("error : ",error);
+		})
+	}
+	componentWillMount(){
+		
+	}
+  /* ###아카식 사이드바 관리 함수### */
+  	toggleSidebar(){
 		console.log("MainPage.toggleSidebar >>> 메서드 호출됨");
 		console.log(this.state);
 		var switchData	= "";
-		if(this.state.sidebar.openerStat === "none"){
+		if(this.state.sidebar_openerStat === "none"){
 			//사이드바가 닫혀있을경우
 			switchData	=	"block";
 		}
@@ -35,22 +58,30 @@ class MainPage extends Component {
 		}
 		
 		this.setState({
-			sidebar:	{
-				openerStat : switchData,
-				sidebarMode	:	this.state.sidebar.sidebarMode
-			}
+			sidebar_openerStat : switchData
 		})
 	}
-	setSidebarMode(mode){
+	setSidebarMode(loginChecker, adminChecker){
 		console.log("MainPage.setSidebarMode >>> 메서드 호출됨");
+        console.log("loginChecker : ",loginChecker);
+        console.log("adminChecker : ",adminChecker);
+        var mode = "normal";
+
+        if(loginChecker === "true"){
+            mode    =   "user";
+            if(adminChecker === "true"){
+                mode    =   "admin";
+            }
+        }
+        else{
+            mode    =   "normal";
+        }
+        
 		this.setState({
-			sidebar:	{
-				openerStat : this.state.sidebar.openerStat,
-				sidebarMode	:	mode
-			}
+			sidebar_sidebarMode	:	mode
 		})
 	}
-
+	/* ###### */
   	render() {
 		const hideStyle = {
 			display:  "none"
@@ -82,8 +113,8 @@ class MainPage extends Component {
 					</div>
 				</div>
 				{/* 아카식 사이드바 */}
-				<AkashicSidebar openerStat		=	{this.state.sidebar.openerStat} 
-								sidebarMode		=	{this.state.sidebar.sidebarMode}
+				<AkashicSidebar openerStat		=	{this.state.sidebar_openerStat} 
+								sidebarMode		=	{this.state.sidebar_sidebarMode}
 								toggleSidebar	=	{this.toggleSidebar} 
 								setSidebarMode	=	{this.setSidebarMode}>
 				</AkashicSidebar>
