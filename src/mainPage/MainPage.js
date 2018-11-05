@@ -11,11 +11,14 @@ class MainPage extends Component {
 	super(props);
 	this.state	=	{
 		sidebar:	{
-			openerStat : 'none'
+			openerStat 	: 'none',
+			sidebarMode	:	'normal',
+			sidebarModeList	:	[ "admin", "user", "normal" ]
 		}
 	};//state
 	console.log(this.state);
 	this.toggleSidebar	=	this.toggleSidebar.bind(this);
+	this.setSidebarMode	=	this.setSidebarMode.bind(this);
   }
 
   toggleSidebar(){
@@ -33,7 +36,17 @@ class MainPage extends Component {
 		
 		this.setState({
 			sidebar:	{
-				openerStat : switchData
+				openerStat : switchData,
+				sidebarMode	:	this.state.sidebar.sidebarMode
+			}
+		})
+	}
+	setSidebarMode(mode){
+		console.log("MainPage.setSidebarMode >>> 메서드 호출됨");
+		this.setState({
+			sidebar:	{
+				openerStat : this.state.sidebar.openerStat,
+				sidebarMode	:	mode
 			}
 		})
 	}
@@ -69,7 +82,11 @@ class MainPage extends Component {
 					</div>
 				</div>
 				{/* 아카식 사이드바 */}
-				<AkashicSidebar openerStat={this.state.sidebar.openerStat} toggleSidebar={this.toggleSidebar}></AkashicSidebar>
+				<AkashicSidebar openerStat		=	{this.state.sidebar.openerStat} 
+								sidebarMode		=	{this.state.sidebar.sidebarMode}
+								toggleSidebar	=	{this.toggleSidebar} 
+								setSidebarMode	=	{this.setSidebarMode}>
+				</AkashicSidebar>
 
 
 				{/* 아카식 메인 컨텐츠 */}
