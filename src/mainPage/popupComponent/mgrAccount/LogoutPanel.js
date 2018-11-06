@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './../popupOverrider.css';
 import axios    from    "axios";
-
+import myUtil  from './../../../util/myUtil';
 class LogoutPanel extends Component{
     constructor(props){
         super(props);
         this.logoutProc =   this.logoutProc.bind(this);
     }
     logoutProc(){
-        axios.get("http://localhost:8090/AkashicRecords/hello/logout.do",{
+        axios.get(new myUtil().serverUrl+"logout.do",{
             params:{
                 ssnId       :   localStorage.ssnId
             }
@@ -17,6 +17,7 @@ class LogoutPanel extends Component{
            console.log("response : ",response);
             localStorage.removeItem( "ssnId" );
             this.props.setSidebarMode("false", "false");
+            this.props.setLoginStatus("false", "false", "noEmail");
             this.props.toggleSidebar();
         })
         .catch( (error)=>{

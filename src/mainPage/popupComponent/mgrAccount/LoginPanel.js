@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Popup from "reactjs-popup";
 import './../popupOverrider.css';
 import axios    from    "axios";
+import myUtil  from './../../../util/myUtil';
 
 
 class LoginPanel extends Component{
@@ -31,7 +32,7 @@ class LoginPanel extends Component{
     }
 
     submitLoginData = (close) => {
-        axios.get("http://localhost:8090/AkashicRecords/hello/loginProc.do",{
+        axios.get( new myUtil().serverUrl+"loginProc.do",{
             params:{
                 email       :   this.state.email
                 ,password   :   this.state.password
@@ -41,6 +42,7 @@ class LoginPanel extends Component{
            console.log("response : ",response);
             localStorage.ssnId  =   response.data.ssnId;
             this.props.setSidebarMode(response.data.loginChecker, response.data.adminCheck);
+            this.props.setLoginStatus(response.data.loginChecker, response.data.adminCheck, response.data.email);
             this.props.toggleSidebar();
 
             close();

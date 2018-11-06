@@ -7,3 +7,12 @@
         width: 6% !important;
         display: inline-block !important;
     }
+    .regPanelWrapper {
+        width: 74% !important;
+        height: 86%;
+        overflow-y: auto;
+    }
+    .pwCheckPanel{
+        width: 60% !important;
+        display: inline-block !important;
+    }

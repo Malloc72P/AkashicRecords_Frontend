@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {LoginPanel, LogoutPanel, RegisterPanel, MyPagePanel, AdminPagePanel} from "./../popupComponent/mgrAccount/MgrPanel"
-import axios    from    "axios";
+import MyPagePwChecker from '../popupComponent/pwChecker/MyPagePwChecker';
 
 class AkashicSidebar extends Component{
     /* ###사이드바 이니셜라이저### */
@@ -13,14 +13,16 @@ class AkashicSidebar extends Component{
     toggleSidebar() {
         this.props.toggleSidebar();
     }
-
     /* ###아카식 사이드바 모드### */
     AdminSidebar =  (
         <span>
             <LogoutPanel    setSidebarMode	=	{this.props.setSidebarMode}
                             toggleSidebar   =   {this.props.toggleSidebar}
+                            setLoginStatus  =   {this.props.setLoginStatus}
             />
-            <MyPagePanel></MyPagePanel>
+            <MyPagePwChecker    toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </MyPagePwChecker>
             <AdminPagePanel></AdminPagePanel>
         </span>
     );
@@ -28,17 +30,23 @@ class AkashicSidebar extends Component{
         <span>
             <LogoutPanel    setSidebarMode	=	{this.props.setSidebarMode}
                             toggleSidebar   =   {this.props.toggleSidebar}
+                            setLoginStatus  =   {this.props.setLoginStatus}
             />
-            <MyPagePanel></MyPagePanel>
+            <MyPagePwChecker    toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </MyPagePwChecker>
         </span>
     );
     NormalSidebar = (
         <span>
             <LoginPanel     setSidebarMode	=	{this.props.setSidebarMode}
                             toggleSidebar   =   {this.props.toggleSidebar}
+                            setLoginStatus  =   {this.props.setLoginStatus}
             >
             </LoginPanel>
-            <RegisterPanel></RegisterPanel>
+            <RegisterPanel  toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </RegisterPanel>
         </span>
         
     );

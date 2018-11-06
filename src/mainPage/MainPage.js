@@ -1,11 +1,18 @@
-import React, { Component } from 'react';
-import AkashicSidebar from './AkashicSidebar/AkashicSidebar';
+import	React, { Component }	from	'react';
+import	AkashicSidebar 			from 	'./AkashicSidebar/AkashicSidebar';
+import	AkashicFooter			from	'./AkashicFooter/AkashicFooter'
+import	MainSidebarOpener 		from	'./SidebarOpener/MainSidebarOpener'
+import	myUtil 					from	'./../util/myUtil';
+import	axios    				from	"axios";
+import	{BrowserRouter}			from	'react-router-dom';
+
 import './mainPage.css';
 import './mainStyle/css_preset.css';
 import './mainStyle/main_mediaSet.css';
 import './mainStyle/myStyle.css';
 import './mainStyle/subSection.css';
-import axios    from    "axios";
+
+
 class MainPage extends Component {
   constructor(props){
 	super(props);
@@ -18,16 +25,24 @@ class MainPage extends Component {
 		//###로그인 체크 상태
 		login_loginChecker	:	'false',
 		login_adminChecker	:	'false',
-		login_user_email		:	''
+		login_user_email	:	'noEmail'
 	};//state
 	console.log(this.state);
 	this.toggleSidebar	=	this.toggleSidebar.bind(this);
 	this.setSidebarMode	=	this.setSidebarMode.bind(this);
+	this.setLoginStatus	=	this.setLoginStatus.bind(this);
+	// this.keyOpener = (
+	// 	<h3 className="chk-side-on" ><i className="chk-side-on im im-key"></i></h3>
+	// );
+	// this.emailOpener =(
+	// 	<h3 className="chk-side-on w3-bar-item">{this.state.login_user_email}</h3>
+	// );
+
   }
   componentDidMount(){
 		console.log("MainPage.componentDidMount >>> 메서드 호출됨");
 		console.log("ssnId : "+localStorage.ssnId);
-		axios.get("http://localhost:8090/AkashicRecords/hello/mainPageProc.do",{
+		axios.get(new myUtil().serverUrl+"mainPageProc.do",{
 			params : {
 				ssnId   :   localStorage.ssnId
 			}
@@ -35,6 +50,8 @@ class MainPage extends Component {
 		.then( (response)=>{
 			console.log("response : ",response);
 			this.setSidebarMode(response.data.loginChecker, response.data.adminChecker);
+			//this.setLoginStatus(loginChecker, adminChecker, user_email)
+			this.setLoginStatus( response.data.loginChecker, response.data.adminChecker, response.data.user_email );
 		})
 		.catch(function(error){
 			console.log("error : ",error);
@@ -81,8 +98,22 @@ class MainPage extends Component {
 			sidebar_sidebarMode	:	mode
 		})
 	}
+	setLoginStatus(loginChecker, adminChecker, user_email){
+		this.setState({
+			login_loginChecker	:	loginChecker,
+			login_adminChecker	:	adminChecker,
+			login_user_email	:	user_email
+		})
+	}
 	/* ###### */
+	/* ###아카식 사이드바 오프너### */
+	//<h3 id="id_h3_openerContent" class="chk-side-on w3-bar-item">${ user_email }</h3>
+	//<h3 className="chk-side-on" ><i className="chk-side-on im im-key"></i></h3>
+	
+	/* ###### */
+
   	render() {
+		console.log("MainPage.render >>> 메서드 호출됨");
 		const hideStyle = {
 			display:  "none"
 		}
@@ -90,13 +121,7 @@ class MainPage extends Component {
 			width		:	"25%"
 		}
 		
-		const footerStyle	=	{
-			textAlign: "right",
-			width: "100%",
-			fontWeight: "bold",
-			borderTop: "1px solid #cbcbcb",
-			bottom: 0
-		}
+		
 		console.log(this.state);
     return (
 				<div>
@@ -105,18 +130,19 @@ class MainPage extends Component {
 					<a href="/" className="w3-bar-item" style={{textDecoration: "none"}}>
 						<h3>Akashic Records Mk.52</h3>
 					</a>
-					
-					<div className="chk-side-on m_mgr_account">
-							<button id="id_btn_keyOpener_sidebar" className="chk-side-on w3-bar-item w3-right w3-button c_sidebar_toggle_key" onClick={this.toggleSidebar}>
-								<h3 className="chk-side-on" ><i className="chk-side-on im im-key"></i></h3>
-							</button>
-					</div>
+					{/* 아카식 사이드바 오프너 */}
+					<MainSidebarOpener 	toggleSidebar	=	{this.toggleSidebar} 
+										loginChecker	=	{this.state.login_loginChecker}
+										email			=	{this.state.login_user_email}
+					>
+					</MainSidebarOpener>
 				</div>
 				{/* 아카식 사이드바 */}
 				<AkashicSidebar openerStat		=	{this.state.sidebar_openerStat} 
 								sidebarMode		=	{this.state.sidebar_sidebarMode}
 								toggleSidebar	=	{this.toggleSidebar} 
-								setSidebarMode	=	{this.setSidebarMode}>
+								setSidebarMode	=	{this.setSidebarMode}
+								setLoginStatus	=	{this.setLoginStatus}>
 				</AkashicSidebar>
 
 
@@ -162,12 +188,12 @@ class MainPage extends Component {
 
 				</div>
 
-					<div style={ {marginBottom: 193} }></div>
-					<div className="w3-bar " style={footerStyle}>
-						<h3 className="w3-bar-item w3-right">Akashic Records</h3>
-					</div>
+					{/* 아카식 footer */}
+					<AkashicFooter>
 
+					</AkashicFooter>
 
+				{/* 최고위 Wrapper */}
 				</div>
 			);
   }//render
