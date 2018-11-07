@@ -1,7 +1,11 @@
-import React, { Component } from 'react';
-import {LoginPanel, LogoutPanel, RegisterPanel, MyPagePanel, AdminPagePanel} from "./../popupComponent/mgrAccount/MgrPanel"
-import MyPagePwChecker from '../popupComponent/pwChecker/MyPagePwChecker';
-
+import  React, { Component }    from    'react';
+import  {
+            LoginPanel 
+            ,LogoutPanel
+            ,RegisterPanel
+        }                       from    "./../popupComponent/mgrAccount/MgrPanel"
+import  MyPagePwChecker         from    '../popupComponent/pwChecker/MyPagePwChecker';
+import  AdminPagePwChecker      from    './../popupComponent/pwChecker/AdminPagePwChecker';
 class AkashicSidebar extends Component{
     /* ###사이드바 이니셜라이저### */
     constructor(props){
@@ -23,7 +27,9 @@ class AkashicSidebar extends Component{
             <MyPagePwChecker    toggleSidebar   =   {this.props.toggleSidebar}
             >
             </MyPagePwChecker>
-            <AdminPagePanel></AdminPagePanel>
+            <AdminPagePwChecker toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </AdminPagePwChecker>
         </span>
     );
     UserSidebar =   (

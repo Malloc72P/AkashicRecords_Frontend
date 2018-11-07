@@ -8,8 +8,7 @@
 	.post-img-area{
 		overflow:hidden;
 	}
-	.cl_img_post_thumbnail{
-	}
+	
 	/************************************
 	 * 0px---> POST-STYLE-textarea
 	************************************/
@@ -22,9 +21,7 @@
 	/************************************
 	 * 0px---> POST-STYLE-imgArea
 	************************************/
-	.cl_img_post_thumbnail{
-		/* width: 83%; */
-	}
+	
 	.post-img-area{
 		margin: 0 auto;
 		width : 460px;
@@ -121,9 +118,6 @@
 	.cl_div_mainContent, div.viewPostArticle{
 		width: 1024px;
 		margin: 0 auto;
-	}
-	.banner-img{
-		height: 388px;
 	}
 	
 	/************************************

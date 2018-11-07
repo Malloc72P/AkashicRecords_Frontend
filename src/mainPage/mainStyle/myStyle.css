@@ -74,11 +74,6 @@
 	padding-left: 0px;
 }
 
-.cl_img_post_thumbnail{
-	/* max-height: 100%;
-	min-height: 100%; */
-}
-
 .post-title{
 	margin: 0px 0px 20px 0px;
 	padding: 0px;
@@ -98,8 +93,6 @@ a.recentPostTitle{
 	font-size: 13px;
 	overflow: hidden;
 }
-	.post-footer-wrapper{
-	}
 	.post-footer-text{
 	 font-size: 10px;
 	    position: absolute;
