@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import	React, { Component }		from 'react';
 import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
-import	{ Map, List }			from	'immutable';
+import	{ List }				from	'immutable';
 
 class RecentPosts extends Component{
 
@@ -13,13 +13,17 @@ class RecentPosts extends Component{
 			postCount	:	1,
 			pageCount	:	1,
 			currentPage	:	1,
-			articleList			:	List([])
+			articleKeyIndex		:	0,
+			articleKeyList		:	new List(),
+			articleList			:	new List([])
 		}
 		console.log("RecentPosts.constructor >>> 메서드 호출됨");
 		if( this.props.setCurrSec != null ){
 			this.props.setCurrSec(this.funcIndex);
 		}
 		this.articleRenderer	=	this.articleRenderer.bind(this);
+		this.getMoreArticle		=	this.getMoreArticle.bind(this);
+		
 	}
 	componentWillMount(){
 		axios.get( new myUtil().serverUrl+"recentPosts.do",{
@@ -31,16 +35,20 @@ class RecentPosts extends Component{
 		   	console.log("response : ",response);
 			var temp	=	this.state.pageNum;
 			this.setState({
-				pageNum	:	temp+1
+				currentPage	:	this.state.pageNum,
+				pageNum		:	temp+1,
+				postCount	:	response.data.count,
+				pageCount	:	response.data.pageCount
 			})
 			console.log("article List : ",response.data.articleList);
 			var tempArr	=	response.data.articleList;
 			console.log("tempArr : ",tempArr);
 			for(var i = 0 ; i < tempArr.length ; i++){
 				console.log("tempArr["+i+"] : ",tempArr[i]);
-				var renderedArticle	=	this.articleRenderer(tempArr[i]);
+				var renderedArticle	=	this.articleRenderer( tempArr[i], this.state.articleKeyIndex++ );
 				this.setState({
-					articleList	:	this.state.articleList.push( renderedArticle )
+					articleKeyList	:	this.state.articleKeyList.push( this.state.articleKeyIndex ),
+					articleList		:	this.state.articleList.push( renderedArticle )
 				})
 			}
         })
@@ -48,9 +56,50 @@ class RecentPosts extends Component{
             console.log("error : ",error);
         })
 	}
-	articleRenderer(article){
+	getMoreArticle(){
+		console.log( "RecentPosts.getMoreArticle >>> 메서드 호출됨" );
+		axios.get( new myUtil().serverUrl+"recentPosts.do",{
+			params	:	{
+				pageNum	:	this.state.pageNum
+			}
+		})
+        .then( (response)=>{
+		   	console.log("response : ",response);
+			var temp	=	this.state.pageNum;
+			this.setState({
+				currentPage	:	this.state.pageNum,
+				pageNum		:	temp+1,
+				postCount	:	response.data.count,
+				pageCount	:	response.data.pageCount
+			})
+			console.log("article List : ",response.data.articleList);
+			var tempArr	=	response.data.articleList;
+			console.log("tempArr : ",tempArr);
+			for(var i = 0 ; i < tempArr.length ; i++){
+				console.log("tempArr["+i+"] : ",tempArr[i]);
+				var renderedArticle	=	this.articleRenderer( tempArr[i], this.state.articleKeyIndex++ );
+				this.setState({
+					articleKeyList	:	this.state.articleKeyList.push( this.state.articleKeyIndex ),
+					articleList		:	this.state.articleList.push( renderedArticle )
+				})
+			}
+        })
+        .catch( (error)=>{
+            console.log("error : ",error);
+        })
+	}
+	articleRenderer(article, key){
+
+		
+		// $(this).click(function(event){
+		// 	console.log("event.target : "+event.target);
+		// 	var targetUrl	=	event.target;
+		// 	getViewPage(targetUrl);
+		// 	event.preventDefault();
+		// });
+
 		return (
-			<div className="post-wrapper w3-container post-body w3-pannel w3-leftbar ">
+			<div key={key} className="post-wrapper w3-container post-body w3-pannel w3-leftbar ">
 				
 				<div className="post-content custom-w3-card">
 					<div className="post-text-area">
@@ -79,8 +128,27 @@ class RecentPosts extends Component{
 			</div>
 		);
 	}
+	articleAppender(){
+		if( this.state.currentPage < this.state.pageCount ){
+			console.log("articleAppender >>> if( currentPage < pageCount )")
+			return (
+				<div class="w3-card w3-middle w3-button" style={{width: "100%"}}
+																		onClick={this.getMoreArticle}>
+			   		<h4>다음페이지</h4>
+			   	</div>
+			)  
+		}
+		else if( this.state.currentPage == this.state.pageCount ){
+			console.log("articleAppender >>> else if( currentPage == pageCount )")
+		}
+		else{
+			console.log("else")
+			console.log("포스트를 가져오는 과정에서 에러가 발생했습니다.")
+		}
+	}
+	
 	componentWillUnmount(){
-		console.log("RecentPosts.componentWillUnmount >>> 메서드 호출됨");
+		console.log("articleAppender >>> RecentPosts.componentWillUnmount >>> 메서드 호출됨");
 	}
 	render(){
 		console.log("final result : ",this.state.articleList);
@@ -103,7 +171,7 @@ class RecentPosts extends Component{
 			<div>
 				<div className="w3-card w3-bar w3-border" >
 					<div className="w3-bar-item">
-						<h5> 포스트</h5>
+						<h5>{this.state.postCount} 포스트</h5>
 					</div>
 					<div className="w3-right w3-bar-item w3-button w3-mobile" >
 						<h5>글쓰기</h5>
@@ -112,8 +180,10 @@ class RecentPosts extends Component{
 
 				{/* forEach */}
 				{this.state.articleList}
-				<hr/>
 				{/* foreach */}
+
+				{/* 아카식 포스트 어펜더 */}
+				{this.articleAppender()}
 					
 			</div>
 		);
