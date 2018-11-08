@@ -1,0 +1,37 @@
+.cl_div_profileSection{
+    padding-bottom: 20px !important;
+}
+.cl_div_profileHeader{
+    margin-top: 22px;
+    margin-bottom: 22px;
+    font-weight: bold;
+}
+.cl_div_profileArticle{
+    opacity: 0.6;
+    margin-top: -10px;
+    margin-bottom: 22px;
+    font-weight: bold;
+    font-style: italic;
+    margin-left: 26px;
+}
+.cl_div_profileImg{
+    float : right;
+    margin-top: -20px;
+    width : 80px;
+    height: 80px;
+    background-image: url("./../../../../img/worker.png");
+}
+.cl_div_discordImg{
+    float : right;
+    margin-top: -20px;
+    width : 80px;
+    height: 80px;
+    background-image: url("./../../../../img/discord.png");
+}
+.cl_div_serverImg{
+    float : right;
+    margin-top: -20px;
+    width : 80px;
+    height: 80px;
+    background-image: url("./../../../../img/server.png");
+}

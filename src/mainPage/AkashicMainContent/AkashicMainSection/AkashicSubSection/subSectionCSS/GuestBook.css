@@ -1,0 +1,177 @@
+.guestBookFullWrapper{
+    margin-top: 50px;
+}
+.adminMsgWrapper{
+    display: block;
+    width: 100%;
+    top: -56px;
+    position: relative;
+}
+.adminMsgWrapper:after{
+    display: block;
+    content: '';
+    clear: both;
+    margin-bottom: 40px;
+}
+.userMsgWrapper{
+    display: block;
+    width: 100%;
+}
+.userMsgWrapper:after{
+    display: block;
+    content: '';
+    clear: both;
+    margin-bottom: 40px;
+}
+.msgCoupler{
+    /* margin-bottom: 50px; */
+    content: '';
+    display: block;
+}
+.adminFullWrapper{ 
+    display: flex;
+    position: relative;
+    float: right;
+    margin-right: 12px;
+}
+.adminFullWrapper:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.adminBalloon {
+    display: block;
+    position: relative;
+    background: #eae36d;
+    padding: 10px 24px 10px 24px;
+    margin-top: 10px;
+    float: right;
+    margin-right: 22px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-width: 420px;
+}
+.adminBalloon:after {
+    content: '';
+    position: absolute;
+    border-top: 14px solid #eae36d;
+    border-right: 14px solid transparent;
+    border-left: 14px solid #eae36d;
+    border-bottom: 14px solid transparent;
+    top: 5px;
+    right: -22px;
+    clear: both;
+}
+
+.adminName{
+    position: absolute;
+    right: 60px;
+    top: -30px;
+}
+.guestBookAdminRegDate{
+    position: absolute;
+    left: 0px;
+    bottom: -8px;
+    opacity: 0.60;
+}
+.userFullWrapper{ 
+    display: flow-root;
+    position: relative;
+    float: left;
+    margin-left: 12px;
+    margin-bottom: 40px;
+}
+.userFullWrapper:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.userBalloon {
+    display: block;
+    position: relative;
+    background: #ccc;
+    padding: 10px 24px 10px 24px;
+    margin-top: 10px;
+    float: left;
+    margin-left: 71px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-width: 420px;
+}
+.userBalloon:after {
+    content: '';
+    position: absolute;
+    border-top: 14px solid #ccc;
+    border-right: 14px solid #ccc;
+    border-left: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    top: 5px;
+    left: -22px;
+    clear: both;
+}
+.adminProfileImgWrapper{
+    width: 48px;
+    height: 48px;
+}
+.userProfileImgWrapper{
+    width: 48px;
+    height: 48px;
+}
+.adminProfileImg{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    top: -26px;
+    left: 3px;
+    position: relative;
+}
+.userProfileImg{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    top: -88px;
+    left: -9px;
+    position: relative;
+}
+.userName{
+    position: absolute;
+    left: 57px;
+    top: -30px;
+}
+.guestBookUserRegDate{
+    position: absolute;
+    right : 0px;
+    bottom: -8px;
+    opacity: 0.60;
+}
+
+.modify-img{
+    background-image: url(./../../../../img/profile_default.png);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid grey;
+}		
+.guestBookProfileName{
+    font-weight: 500;
+}
+.guestBook-text{
+    
+}
+.guestBookUserReply{
+    display: inline-block;
+    position: absolute;
+    right: -23px;
+    bottom: -17px;
+}
+.guestBookUserReply_icon{
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.6;
+}
+.guestBookUserReply_icon:hover{
+
+    opacity: 1;
+}

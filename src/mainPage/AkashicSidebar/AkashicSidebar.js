@@ -1,49 +1,63 @@
-import React, { Component } from 'react';
-import {LoginPanel, LogoutPanel, RegisterPanel, MyPagePanel, AdminPagePanel} from "./../popupComponent/mgrAccount/MgrPanel"
-import axios    from    "axios";
-
+import  React, { Component }    from    'react';
+import  {
+            LoginPanel 
+            ,LogoutPanel
+            ,RegisterPanel
+        }                       from    "./../popupComponent/mgrAccount/MgrPanel"
+import  MyPagePwChecker         from    '../popupComponent/pwChecker/MyPagePwChecker';
+import  AdminPagePwChecker      from    './../popupComponent/pwChecker/AdminPagePwChecker';
 class AkashicSidebar extends Component{
-
+    /* ###사이드바 이니셜라이저### */
     constructor(props){
         super(props);
         this.toggleSidebar  =   this.toggleSidebar.bind(this);
     }
-    componentDidMount(){
-        console.log("AkashicSidebar.componentDidMount >>> 메서드 호출됨");
-        axios.get("http://localhost:8090/AkashicRecords/hello/mainPageProc.do")
-        .then( (response)=>{
-           console.log("response : ",response);
-        })
-        .catch(function(error){
-            console.log("error : ",error);
-        })
-    }
+    /* ###### */
+
     toggleSidebar() {
         this.props.toggleSidebar();
     }
+    /* ###아카식 사이드바 모드### */
     AdminSidebar =  (
         <span>
-            <LogoutPanel></LogoutPanel>
-            <MyPagePanel></MyPagePanel>
-            <AdminPagePanel></AdminPagePanel>
+            <LogoutPanel    setSidebarMode	=	{this.props.setSidebarMode}
+                            toggleSidebar   =   {this.props.toggleSidebar}
+                            setLoginStatus  =   {this.props.setLoginStatus}
+            />
+            <MyPagePwChecker    toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </MyPagePwChecker>
+            <AdminPagePwChecker toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </AdminPagePwChecker>
         </span>
     );
     UserSidebar =   (
         <span>
-            <LogoutPanel></LogoutPanel>
-            <MyPagePanel></MyPagePanel>
+            <LogoutPanel    setSidebarMode	=	{this.props.setSidebarMode}
+                            toggleSidebar   =   {this.props.toggleSidebar}
+                            setLoginStatus  =   {this.props.setLoginStatus}
+            />
+            <MyPagePwChecker    toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </MyPagePwChecker>
         </span>
     );
     NormalSidebar = (
         <span>
-            <LoginPanel setSidebarMode	=	{this.props.setSidebarMode}
-                        toggleSidebar   =   {this.props.toggleSidebar}
+            <LoginPanel     setSidebarMode	=	{this.props.setSidebarMode}
+                            toggleSidebar   =   {this.props.toggleSidebar}
+                            setLoginStatus  =   {this.props.setLoginStatus}
             >
             </LoginPanel>
-            <RegisterPanel></RegisterPanel>
+            <RegisterPanel  toggleSidebar   =   {this.props.toggleSidebar}
+            >
+            </RegisterPanel>
         </span>
         
     );
+    /* ###### */
+
     render(){
         console.log(this.props.openerStat);
         const sideBarStyle	=	{
@@ -64,7 +78,7 @@ class AkashicSidebar extends Component{
         }
 
         return (
-            <div id="akashicSideBar" class="main-sidebar w3-sidebar w3-bar-block w3-card w3-animate-right" style={sideBarStyle}>
+            <div id="akashicSideBar" className="main-sidebar w3-sidebar w3-bar-block w3-card w3-animate-right" style={sideBarStyle}>
                 <div id="id_div_notLoggedIn_sidebar "href="#">
                     <h3 className="chk-side-on w3-bar-item w3-button" onClick={this.toggleSidebar}>Close</h3>
                     {sidebarElement}
