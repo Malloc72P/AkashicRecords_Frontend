@@ -1,0 +1,41 @@
+.postList-Wrapper{
+    padding: 18px 0 20px;
+}
+.postList{
+    position: relative;
+    height: 88px;
+    padding-left: 0px !important;
+}
+.postList-img{
+    position : absolute;
+    border: 1px solid #c1c1c1;
+    width: 72px; height: 72px;
+}
+.postList-img1{
+    left : 3px;
+    top  : 5px;
+}
+.postList-img2{
+    left : 6px;
+    top  : 8px;
+}
+.postList-img3{
+    left : 9px;
+    top  : 11px;
+}
+.postList-text{
+    position: relative;
+    left: 92px;
+}
+.postList-text-title{
+    font-weight: bold;
+}
+.postList-text-article{
+    position: relative;
+    left: 7px;
+    top: 1px;
+}
+.textDivider{
+    padding-left: 3px;
+    padding-right: 3px;
+}

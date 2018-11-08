@@ -14,7 +14,12 @@ class AkashicSubSection extends Component{
 	render(){
 		return(
 			<div className="sub-section" style={ {marginBottom: 80} }>
-				<Route exact path	=	"/"     				component={RecentPosts}/>
+				<Route 	
+					exact path	=	"/"     				
+					render		=	{
+						()	=>	<RecentPosts setCurrSec={this.props.setCurrSec}></RecentPosts>
+					}
+				/>
 
 				<Route 
 					path		=	"/mainPage/profile"     

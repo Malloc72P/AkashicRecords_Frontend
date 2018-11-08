@@ -1,0 +1,27 @@
+div.viewPostArticle{
+    min-height: 100%;
+    -webkit-box-shadow: 0px 42px 75px -27px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 42px 75px -27px rgba(0,0,0,0.75);
+    box-shadow: 0px 20px 75px -20px rgba(0,0,0,0.75);
+}
+div.viewPostNavBar{
+    top: 0px;
+    border-bottom : 1px solid #cbcbcb;
+    box-shadow: 0px 5px 6px -5px rgba(0,0,0,0.5);
+}
+div.viewPostHeader{
+    width: 80%;
+    font-size: 12px;
+    margin: 0 auto;
+    padding: 50px 0 50px 0;
+}
+.viewPostTitle{
+    font-weight: 600;
+    font-size: 33px;
+}
+.viewPostDate{
+    opacity: 0.4;
+}
+.viewPostViewCount{
+    opacity: 0.4;
+}

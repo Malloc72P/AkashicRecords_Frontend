@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "immutable": "^4.0.0-rc.12",
+    "node-html-parser": "^1.1.10",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-element-to-jsx-string": "^14.0.2",

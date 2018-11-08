@@ -1,7 +1,8 @@
 import	React, { Component }		from 'react';
-import	axios					from    "axios";
-import	myUtil					from 	'./../../../../util/myUtil';
-import	{ List }				from	'immutable';
+import	axios						from    "axios";
+import	myUtil						from 	'./../../../../util/myUtil';
+import	{ List }					from	'immutable';
+import  {Link}    					from    'react-router-dom';
 
 class RecentPosts extends Component{
 
@@ -10,7 +11,7 @@ class RecentPosts extends Component{
 		this.funcIndex	=	1;
 		this.state	=	{
 			pageNum		:	1,
-			postCount	:	1,
+			postCount	:	0,
 			pageCount	:	1,
 			currentPage	:	1,
 			articleKeyIndex		:	0,
@@ -18,9 +19,7 @@ class RecentPosts extends Component{
 			articleList			:	new List([])
 		}
 		console.log("RecentPosts.constructor >>> 메서드 호출됨");
-		if( this.props.setCurrSec != null ){
-			this.props.setCurrSec(this.funcIndex);
-		}
+		this.props.setCurrSec(this.funcIndex);
 		this.articleRenderer	=	this.articleRenderer.bind(this);
 		this.getMoreArticle		=	this.getMoreArticle.bind(this);
 		
@@ -45,10 +44,14 @@ class RecentPosts extends Component{
 			console.log("tempArr : ",tempArr);
 			for(var i = 0 ; i < tempArr.length ; i++){
 				console.log("tempArr["+i+"] : ",tempArr[i]);
-				var renderedArticle	=	this.articleRenderer( tempArr[i], this.state.articleKeyIndex++ );
+				var renderedArticle	=	this.articleRenderer( tempArr[i], this.state.articleKeyIndex );
+				
 				this.setState({
 					articleKeyList	:	this.state.articleKeyList.push( this.state.articleKeyIndex ),
 					articleList		:	this.state.articleList.push( renderedArticle )
+				})
+				this.setState({
+					articleKeyIndex	:	this.state.articleKeyIndex + 1
 				})
 			}
         })
@@ -77,10 +80,14 @@ class RecentPosts extends Component{
 			console.log("tempArr : ",tempArr);
 			for(var i = 0 ; i < tempArr.length ; i++){
 				console.log("tempArr["+i+"] : ",tempArr[i]);
-				var renderedArticle	=	this.articleRenderer( tempArr[i], this.state.articleKeyIndex++ );
+				var renderedArticle	=	this.articleRenderer( tempArr[i], this.state.articleKeyIndex );
+				
 				this.setState({
 					articleKeyList	:	this.state.articleKeyList.push( this.state.articleKeyIndex ),
 					articleList		:	this.state.articleList.push( renderedArticle )
+				})
+				this.setState({
+					articleKeyIndex	:	this.state.articleKeyIndex + 1
 				})
 			}
         })
@@ -105,9 +112,9 @@ class RecentPosts extends Component{
 					<div className="post-text-area">
 						<div className="post-header w3-xlarge">
 							<p className="w3-large post-title" style={{padding: "5px 5px 5px 15px"}}>
-								<a href="" className="recentPostTitle">
+								<Link to={"/mainPage/viewPost/"+article.post_id}>
 									{article.post_title}
-								</a>
+								</Link>
 							</p>
 						</div>
 						<div className="post-summary w3-small w3-opacity">
@@ -132,13 +139,13 @@ class RecentPosts extends Component{
 		if( this.state.currentPage < this.state.pageCount ){
 			console.log("articleAppender >>> if( currentPage < pageCount )")
 			return (
-				<div class="w3-card w3-middle w3-button" style={{width: "100%"}}
+				<div className="w3-card w3-middle w3-button" style={{width: "100%"}}
 																		onClick={this.getMoreArticle}>
 			   		<h4>다음페이지</h4>
 			   	</div>
 			)  
 		}
-		else if( this.state.currentPage == this.state.pageCount ){
+		else if( this.state.currentPage === this.state.pageCount ){
 			console.log("articleAppender >>> else if( currentPage == pageCount )")
 		}
 		else{

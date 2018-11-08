@@ -53,8 +53,17 @@ class MainPage extends Component {
 			//this.setLoginStatus(loginChecker, adminChecker, user_email)
 			this.setLoginStatus( response.data.loginChecker, response.data.adminChecker, response.data.user_email );
 		})
-		.catch(function(error){
-			console.log("error : ",error);
+		.catch((error) => {
+			alert("세션이 만료되었습니다. 재 로그인 해주세요.");
+			
+			this.setState({
+				sidebar_sidebarMode	:	'normal',
+				login_loginChecker	:	'false',
+				login_adminChecker	:	'false',
+				login_user_email	:	'noEmail'
+			})
+
+			localStorage.removeItem("ssnId");
 		})
 	}
 	componentWillMount(){
@@ -105,12 +114,6 @@ class MainPage extends Component {
 			login_user_email	:	user_email
 		})
 	}
-	/* ###### */
-	/* ###아카식 사이드바 오프너### */
-	//<h3 id="id_h3_openerContent" class="chk-side-on w3-bar-item">${ user_email }</h3>
-	//<h3 className="chk-side-on" ><i className="chk-side-on im im-key"></i></h3>
-	
-	/* ###### */
 
   	render() {
 		console.log("MainPage.render >>> 메서드 호출됨");
