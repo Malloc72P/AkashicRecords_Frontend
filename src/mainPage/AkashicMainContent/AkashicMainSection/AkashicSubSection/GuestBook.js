@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
 import	{ List }				from	'immutable';
+import	{ Link }				from	'react-router-dom';
+import 	WriteMsg 				from './WriteMsg';
 
 import	'./subSectionCSS/GuestBook.css'
+
 
 class GuestBook extends Component{
 
@@ -24,6 +27,8 @@ class GuestBook extends Component{
 		this.msgRenderer		=	this.msgRenderer.bind(this);
 		this.replyMsgRenderer	=	this.replyMsgRenderer.bind(this);
 		this.getMoreMsg			=	this.getMoreMsg.bind(this);
+		this.writeMsg			=	this.writeMsg.bind(this);
+		this.writeReplyMsg		=	this.writeReplyMsg.bind(this);
 	}
 	componentWillMount(){
 		axios.get( new myUtil().serverUrl+"guestBook.do")
@@ -130,10 +135,10 @@ class GuestBook extends Component{
 							<div className="guestBookUserRegDate">
 								<p className="w3-small"> {msg.regDate} </p>
 							</div>
-							<div	 
-									className="guestBookUserReply">
+							<div	className="guestBookUserReply">
 								<i 	className="im im-plus-circle guestBookUserReply_icon" 
-									title={msg.user_msgId}></i>
+									title={msg.user_msgId}>
+								</i>
 							</div>
 						</div>
 					</div>
@@ -170,6 +175,12 @@ class GuestBook extends Component{
 			);
 		}
 	}
+	writeMsg(){
+
+	}
+	writeReplyMsg(){
+
+	}
 	render(){
 		console.log("guestbook.render >>> this.state.msgList : ",this.state.msgList);
 		for(var i = 0 ; i < this.state.msgList.size ; i++){
@@ -182,9 +193,13 @@ class GuestBook extends Component{
 					<div className="w3-bar-item">
 						<h5>{ this.state.msgCount } 메세지</h5>
 					</div>
-					<button className="w3-right w3-bar-item w3-button w3-mobile" href="#">
+					{/* <button className="w3-right w3-bar-item w3-button w3-mobile"
+							onClick={this.writeMsg}>
 						<h5>방명록 작성</h5>
-					</button>
+					</button> */}
+					<WriteMsg>
+
+					</WriteMsg>
 				</div>
 				<div className="guestBookFullWrapper" >
 
