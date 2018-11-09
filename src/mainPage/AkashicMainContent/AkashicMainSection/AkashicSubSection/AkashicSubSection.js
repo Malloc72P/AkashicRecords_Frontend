@@ -14,13 +14,15 @@ class AkashicSubSection extends Component{
 	render(){
 		return(
 			<div className="sub-section" style={ {marginBottom: 80} }>
+				{/* 아카식-라우트 >>> 메인 페이지 */}
 				<Route 	
 					exact path	=	"/"     				
 					render		=	{
 						()	=>	<RecentPosts setCurrSec={this.props.setCurrSec}></RecentPosts>
 					}
 				/>
-
+				
+				{/* 아카식-라우트 >>> 프로필 페이지 */}
 				<Route 
 					path		=	"/mainPage/profile"     
 					render		=	{
@@ -28,6 +30,7 @@ class AkashicSubSection extends Component{
 					}
 				/>
 
+				{/* 아카식-라우트 >>> 최신 포스트 */}
 				<Route 
 					path		=	"/mainPage/recentPost"  
 					render		=	{
@@ -35,6 +38,7 @@ class AkashicSubSection extends Component{
 					}
 				/>
 
+				{/* 아카식-라우트 >>> 시리즈 */}
 				<Route 
 					path		=	"/mainPage/series"      
 					render		=	{
@@ -42,6 +46,7 @@ class AkashicSubSection extends Component{
 					}
 				/>
 
+				{/* 아카식-라우트 >>> 방명록*/}
 				<Route 
 					path		=	"/mainPage/guestBook"   
 					render		=	{
