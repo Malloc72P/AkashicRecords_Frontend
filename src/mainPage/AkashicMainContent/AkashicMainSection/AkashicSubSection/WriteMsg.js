@@ -1,8 +1,8 @@
 import	React, { Component } 	from	'react';
 import	axios 					from	'axios';
-import Popup from "reactjs-popup";
-import	myUtil 					from	'./../../../../util/myUtil'
-import	{Redirect}				from	'react-router-dom';
+import 	Popup from "reactjs-popup";
+import	myUtil 					from	'./../../../../util/myUtil';
+import { withRouter } 			from	'react-router-dom'
 
 class WriteMsg extends Component{
 
@@ -12,10 +12,13 @@ class WriteMsg extends Component{
 			msgContent	:	""
 		}
 		console.log("WritePostPage.constructor >>> 메서드 호출됨");
-		this.submitMsg	=	this.submitMsg.bind(this);
+		this.submitMsg		=	this.submitMsg.bind(this);
 		this.setMsgContent	=	this.setMsgContent.bind(this);
 		this.goBack			=	this.goBack.bind(this);
+		this.historyMgr		=	this.historyMgr.bind(this);
+		
 	}
+	
 	setMsgContent(e){
 		this.setState({
 			msgContent	:	e.target.value
@@ -24,7 +27,11 @@ class WriteMsg extends Component{
 	goBack(){
 		this.props.history.goBack();
 	}
-	submitMsg = (close) =>{
+	historyMgr = () => {
+		console.log("writeMsg.historyMgr >>> this.props.history : ",this.props.history);
+		this.props.history.push("#");
+	}
+	submitMsg = (close, historyMgr) =>{
 		var _ssnId		=	localStorage.getItem("ssnId");
 		console.log(" writeMsg >>> _ssnId : ",_ssnId);
 
@@ -38,8 +45,10 @@ class WriteMsg extends Component{
 			   console.log("writeMsg >>> response : ",response.data);
 			   if(response.data.insertChecker === "true"){
 					alert("저장되었습니다");
+					this.props.refreshPage();
 					close();
-					// 여기서 리다이렉트 기능을 추가해야해
+					
+					
 			   }
 			   else if(response.data.insertChecker === "sessionInvalid"){
 				   alert("세션이 만료되었습니다. 로그인해주시기 바랍니다.");
@@ -56,6 +65,7 @@ class WriteMsg extends Component{
         })
 
 	}
+	
 	render(){
 		var	boldText	=	{
 			fontWeight	:	"bold"
@@ -64,7 +74,7 @@ class WriteMsg extends Component{
 			display	: 	"block",
 			zIndex	:	600
 		}
-		console.log("writeMsg >>> adminPageBtn : ",this.props.adminPageBtn );
+		
 		return (
 			
 			<Popup 	trigger={ 
@@ -96,7 +106,7 @@ class WriteMsg extends Component{
 								<input 
 									className="w3-btn w3-white btnMargin btnBorderBottom"
 									type ="button" value="작성하기"
-									onClick={()=>this.submitMsg(close)}/>
+									onClick={()=>this.submitMsg(close, this.historyMgr)}/>
 								
 								<input className="w3-btn w3-white btnBorderBottom"
 									type ="button"  value="닫기"
@@ -112,4 +122,4 @@ class WriteMsg extends Component{
 		)
 	}
 }
-export default WriteMsg;
+export default withRouter(WriteMsg);

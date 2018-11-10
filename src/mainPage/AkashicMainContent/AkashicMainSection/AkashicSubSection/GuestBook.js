@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
-import	{ List }				from	'immutable';
+import	{ List, update }				from	'immutable';
 import	{ Link }				from	'react-router-dom';
 import 	WriteMsg 				from './WriteMsg';
 
@@ -29,8 +29,40 @@ class GuestBook extends Component{
 		this.getMoreMsg			=	this.getMoreMsg.bind(this);
 		this.writeMsg			=	this.writeMsg.bind(this);
 		this.writeReplyMsg		=	this.writeReplyMsg.bind(this);
+		this.refreshPage		=	this.refreshPage.bind(this);
+		this.getFirstMsg		=	this.getFirstMsg.bind(this);
 	}
 	componentWillMount(){
+		this.getFirstMsg();
+	}
+	componentWillUnmount(){
+		console.log("GuestBook.componentWillUnmount >>> 메서드 호출됨");
+	}
+	refreshPage(){
+		// while(!this.state.msgKeyList.isEmpty){
+		// 	this.setState( prevState => {
+		// 		msgList	:	update( prevState.msgList, { $splice : [[ index, 1 ]] } )
+		// 	})
+		// }
+		console.log("msgDelete >>> this.state.msgKeyList.size : ",this.state.msgKeyList.size);
+		var _tempListSize	=	this.state.msgKeyList.size;
+		for(var index = 0 ; index < _tempListSize ; index++){
+			console.log("msgDelete >>> ["+index+"]");
+			this.setState({
+				msgList		: 	this.state.msgList.filter( 	  (_, i) => i === index ),
+				msgKeyList	:	this.state.msgKeyList.filter( (_, i) => i === index )
+			})	
+		}
+		
+		this.setState({
+			pageNum		:	1,
+			msgCount	:	0,
+			pageCount	:	1,
+			currentPage	:	1
+		})
+		this.getFirstMsg();
+	}
+	getFirstMsg(){
 		axios.get( new myUtil().serverUrl+"guestBook.do")
         .then( (response)=>{
 			   	console.log("GuestBook >>> response : ",response);
@@ -59,9 +91,6 @@ class GuestBook extends Component{
         .catch( (error)=>{
             console.log("error : ",error);
         })
-	}
-	componentWillUnmount(){
-		console.log("GuestBook.componentWillUnmount >>> 메서드 호출됨");
 	}
 	getMoreMsg(){
 		console.log( "GuestBook.getMoreMsg >>> 메서드 호출됨" );
@@ -197,7 +226,8 @@ class GuestBook extends Component{
 							onClick={this.writeMsg}>
 						<h5>방명록 작성</h5>
 					</button> */}
-					<WriteMsg>
+					<WriteMsg 
+							refreshPage={this.refreshPage}>
 
 					</WriteMsg>
 				</div>
