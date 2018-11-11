@@ -2,6 +2,7 @@
   "name": "akashic_records",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://skynet765.iptime.org",
   "dependencies": {
     "@tinymce/tinymce-react": "^2.4.0",
     "axios": "^0.18.0",
