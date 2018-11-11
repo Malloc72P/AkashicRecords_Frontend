@@ -2,11 +2,13 @@ import  React, { Component }    from    'react';
 import  Popup                   from    "reactjs-popup";
 import  axios                   from    'axios';
 import  myUtil                  from    './../../../util/myUtil'
+import  {Link}                  from    'react-router-dom';
+import  WriteMsg                from    './../../AkashicMainContent/AkashicMainSection/AkashicSubSection/WriteMsg';
 
-class AdminPagePwChecker extends Component{
+class MsgWritePagePwChecker extends Component{
     constructor(props){
         super(props);
-        console.log("AdminPagePwChecker.constructor >>> 메서드 호출됨");
+        console.log("MsgWritePagePwChecker.constructor >>> 메서드 호출됨");
         this.state  =   {
             password        :   "",
             pwBtn           :   false,
@@ -14,7 +16,6 @@ class AdminPagePwChecker extends Component{
         }//state init
 
         this.setPassword        =   this.setPassword.bind(this);
-        this.adminPageOpener    =   this.adminPageOpener.bind(this);
     }
     setPassword(e){
         console.log("LoginPanel.setPassword >>> e : ",e.target.value);
@@ -23,7 +24,7 @@ class AdminPagePwChecker extends Component{
         })
     }
     submitPwData = (close)=>{
-        axios.get( new myUtil().serverUrl+"adminPwCheckProc.do",{
+        axios.get( new myUtil().serverUrl+"pwCheckProc.do",{
             params:{
                 ssnId       :   localStorage.ssnId
                 ,password   :   this.state.password
@@ -53,41 +54,20 @@ class AdminPagePwChecker extends Component{
             close();
         })
     }
-    adminPageOpener = (close) => {
-        close();
-        
-        var url 	=	new myUtil().serverUrl+"adminPage.do";
-        var title	=	"adminPage";
-        var pwForm	=	document.createElement("form");
-
-        window.open("",title,"width=1080, height=600");
-
-        pwForm.setAttribute("target",title);
-        pwForm.setAttribute("charset","UTF-8");
-        pwForm.setAttribute("method","post");
-        pwForm.setAttribute("action",url);
-
-        var hf  =   document.createElement("input");
-        hf.setAttribute("type",     "hidden");
-        hf.setAttribute("name",     "password");
-        hf.setAttribute("value",    this.state.password);
-        pwForm.appendChild(hf);
-
-        var hf2  =   document.createElement("input");
-        hf2.setAttribute("type",     "hidden");
-        hf2.setAttribute("name",     "ssnId");
-        hf2.setAttribute("value",    localStorage.ssnId);
-        pwForm.appendChild(hf2);
-
-        document.body.appendChild(pwForm);
-        pwForm.submit();
-    }
+    
     render(){
         const fontStyle={
             fontWeight  :   "bold"
         }
+       
         return(
-            <Popup trigger={ <button className="w3-bar-item w3-button">AdminPage</button> } modal closeOnDocumentClick>
+            <Popup 
+                trigger={ 
+                    <button className="w3-right w3-bar-item w3-button w3-mobile">
+                            <h5>방명록 작성</h5>
+                    </button>
+                 } 
+                modal closeOnDocumentClick>
             {
                 close => (
                     <div className="w3-white w3-card-4" style={{width: "100%"}}>
@@ -111,10 +91,11 @@ class AdminPagePwChecker extends Component{
                             <input className="w3-btn  btnMargin btnBorderBottom" type ="button" value="패스워드 확인"
                                                 disabled={this.state.pwBtn}         onClick={ ()=>this.submitPwData(close)}>
                             </input>
-
-                            <input className="w3-btn  btnMargin btnBorderBottom" type ="button" value="관리자페이지"
-                                    disabled={this.state.adminPageBtn} onClick={()=>this.adminPageOpener(close)}> 
-                            </input>
+                            
+                            <WriteMsg    adminPageBtn={this.state.adminPageBtn}
+                                            closeParent =   { ()=>function(close){ close() } }
+                            >
+                            </WriteMsg>
                             
 
                             <input className="w3-btn  btnBorderBottom"  type ="button" name="bt_goBack"  
@@ -129,4 +110,4 @@ class AdminPagePwChecker extends Component{
         );
     }
 }
-export default AdminPagePwChecker;
+export default MsgWritePagePwChecker;

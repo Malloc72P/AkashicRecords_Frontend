@@ -3,7 +3,7 @@ import	axios						from    "axios";
 import	myUtil						from 	'./../../../../util/myUtil';
 import	{ List }					from	'immutable';
 import  {Link}    					from    'react-router-dom';
-
+import	WritePostPagePwChecker		from	'./../../../popupComponent/pwChecker/WritePostPagePwChecker';
 class RecentPosts extends Component{
 
 	constructor(props){
@@ -97,14 +97,6 @@ class RecentPosts extends Component{
 	}
 	articleRenderer(article, key){
 
-		
-		// $(this).click(function(event){
-		// 	console.log("event.target : "+event.target);
-		// 	var targetUrl	=	event.target;
-		// 	getViewPage(targetUrl);
-		// 	event.preventDefault();
-		// });
-
 		return (
 			<div key={key} className="post-wrapper w3-container post-body w3-pannel w3-leftbar ">
 				
@@ -112,7 +104,7 @@ class RecentPosts extends Component{
 					<div className="post-text-area">
 						<div className="post-header w3-xlarge">
 							<p className="w3-large post-title" style={{padding: "5px 5px 5px 15px"}}>
-								<Link to={"/mainPage/viewPost/"+article.post_id}>
+								<Link to={"/mainPage/viewPost/"+article.post_id} style={{textDecoration: "none"}}>
 									{article.post_title}
 								</Link>
 							</p>
@@ -180,9 +172,12 @@ class RecentPosts extends Component{
 					<div className="w3-bar-item">
 						<h5>{this.state.postCount} 포스트</h5>
 					</div>
-					<div className="w3-right w3-bar-item w3-button w3-mobile" >
+					
+					<Link 	to="/mainPage/writePost"
+							className="w3-right w3-bar-item w3-button w3-mobile" >
 						<h5>글쓰기</h5>
-					</div>
+					</Link>
+					
 				</div>
 
 				{/* forEach */}
