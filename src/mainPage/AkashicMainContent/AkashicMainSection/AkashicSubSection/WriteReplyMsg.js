@@ -2,9 +2,8 @@ import	React, { Component } 	from	'react';
 import	axios 					from	'axios';
 import 	Popup from "reactjs-popup";
 import	myUtil 					from	'./../../../../util/myUtil';
-import { withRouter } 			from	'react-router-dom'
 
-class WriteMsg extends Component{
+class WriteReplyMsg extends Component{
 
 	constructor(props){
 		super(props);
@@ -14,9 +13,6 @@ class WriteMsg extends Component{
 		console.log("WritePostPage.constructor >>> 메서드 호출됨");
 		this.submitMsg		=	this.submitMsg.bind(this);
 		this.setMsgContent	=	this.setMsgContent.bind(this);
-		this.goBack			=	this.goBack.bind(this);
-		this.historyMgr		=	this.historyMgr.bind(this);
-		
 	}
 	
 	setMsgContent(e){
@@ -24,40 +20,48 @@ class WriteMsg extends Component{
 			msgContent	:	e.target.value
 		})
 	}
-	goBack(){
-		this.props.history.goBack();
-	}
-	historyMgr = () => {
-		console.log("writeMsg.historyMgr >>> this.props.history : ",this.props.history);
-		this.props.history.push("#");
-	}
+	
 	submitMsg = (close, historyMgr) =>{
 		var _ssnId		=	localStorage.getItem("ssnId");
 		console.log(" writeMsg >>> _ssnId : ",_ssnId);
-
-		axios.get( new myUtil().serverUrl+"guestBookProc.do", {
+		axios.get( new myUtil().serverUrl+"guestBookReplyProc.do", {
 			params	:	{
 				ssnId			:	_ssnId,
-				gbMsg			:	this.state.msgContent
+				gbReplyMsg		:	this.state.msgContent,
+				gbReplyMsg_id	:	this.props.user_msgId
 			}
 		})
         .then( (response)=>{
-			   console.log("writeMsg >>> response : ",response.data);
-			   if(response.data.insertChecker === "true"){
-					alert("저장되었습니다");
-					this.props.refreshPage();
-					close();
-					
-					
-			   }
-			   else if(response.data.insertChecker === "sessionInvalid"){
-				   alert("세션이 만료되었습니다. 로그인해주시기 바랍니다.");
-				   
-				   close();
-			   }
-			   else{
-				   alert("저장에 실패하였습니다");
-			   }
+			/**
+			 * invalidSession
+			 * lowAuthorize
+			 * noArgument
+			 */
+			console.log("writeMsg >>> response : ",response.data);
+			if(response.data.insertChecker === "true"){
+				alert("저장되었습니다");
+				this.props.refreshPage();
+				close();
+			}
+			else if(response.data.insertChecker === "false"){
+				alert("저장에 실패하였습니다.");
+				close();
+			}
+			else if(response.data.insertChecker === "invalidSession"){
+				alert("세션이 만료되었습니다. 로그인해주시기 바랍니다.");
+				close();
+			}
+			else if(response.data.insertChecker === "lowAuthorize"){
+				alert("권한이 부족합니다.");
+				close();
+			}
+			else if(response.data.insertChecker === "noArgument"){
+				alert("모든 입력란에 입력하주시기바랍니다.");
+				close();
+			}
+			else{
+				alert("저장에 실패하였습니다");
+			}
         })
         .catch( (error)=>{
 			console.log("writeMsg >>> error : ",error);
@@ -78,9 +82,12 @@ class WriteMsg extends Component{
 		return (
 			
 			<Popup 	trigger={ 
-							<button className="w3-right w3-bar-item w3-button w3-mobile">
-									<h5>방명록 작성</h5>
-							</button>	
+								<div	className	=	"guestBookUserReply">
+									<i 	className="im im-plus-circle guestBookUserReply_icon" 
+										title={this.props.user_msgId}
+									>
+									</i>
+								</div>
 							} 
 					modal closeOnDocumentClick>
 					{close => (
@@ -88,9 +95,8 @@ class WriteMsg extends Component{
 								style={popupOverider} >
 
 							<div className="w3-container w3-bar w3-white">
-								<h2 className="w3-bar-item">방명록 작성하기...</h2>
+								<h2 className="w3-bar-item">방명록 답글 작성하기...</h2>
 							</div>
-
 							<div className="w3-container  w3-white" style={{marginTop: "-1px"}}>
 								<hr className="w3-black"/>
 							</div>
@@ -123,4 +129,4 @@ class WriteMsg extends Component{
 		)
 	}
 }
-export default withRouter(WriteMsg);
+export default WriteReplyMsg;

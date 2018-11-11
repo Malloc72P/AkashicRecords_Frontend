@@ -42,14 +42,12 @@ class SeriesWritePagePwChecker extends Component{
             }
             else{
                 alert("본인확인에 실패했습니다.");
-                this.props.toggleSidebar();
             }
             
         })
         .catch( (error)=>{
             console.log("error : ",error);
             alert("본인확인에 실패했습니다.");
-            this.props.toggleSidebar();
             close();
         })
     }

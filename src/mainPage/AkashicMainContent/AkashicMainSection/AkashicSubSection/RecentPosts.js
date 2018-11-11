@@ -173,9 +173,10 @@ class RecentPosts extends Component{
 						<h5>{this.state.postCount} 포스트</h5>
 					</div>
 					
-					<WritePostPagePwChecker>
-						
-					</WritePostPagePwChecker>
+					<Link 	to="/mainPage/writePost"
+							className="w3-right w3-bar-item w3-button w3-mobile" >
+						<h5>글쓰기</h5>
+					</Link>
 					
 				</div>
 

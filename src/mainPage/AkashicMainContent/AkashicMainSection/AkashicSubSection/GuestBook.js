@@ -3,7 +3,8 @@ import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
 import	{ List, update }				from	'immutable';
 import	{ Link }				from	'react-router-dom';
-import 	WriteMsg 				from './WriteMsg';
+import 	WriteMsg 				from 	'./WriteMsg';
+import	WriteReplyMsg			from	'./WriteReplyMsg';
 
 import	'./subSectionCSS/GuestBook.css'
 
@@ -27,8 +28,6 @@ class GuestBook extends Component{
 		this.msgRenderer		=	this.msgRenderer.bind(this);
 		this.replyMsgRenderer	=	this.replyMsgRenderer.bind(this);
 		this.getMoreMsg			=	this.getMoreMsg.bind(this);
-		this.writeMsg			=	this.writeMsg.bind(this);
-		this.writeReplyMsg		=	this.writeReplyMsg.bind(this);
 		this.refreshPage		=	this.refreshPage.bind(this);
 		this.getFirstMsg		=	this.getFirstMsg.bind(this);
 	}
@@ -39,11 +38,6 @@ class GuestBook extends Component{
 		console.log("GuestBook.componentWillUnmount >>> 메서드 호출됨");
 	}
 	refreshPage(){
-		// while(!this.state.msgKeyList.isEmpty){
-		// 	this.setState( prevState => {
-		// 		msgList	:	update( prevState.msgList, { $splice : [[ index, 1 ]] } )
-		// 	})
-		// }
 		console.log("msgDelete >>> this.state.msgKeyList.size : ",this.state.msgKeyList.size);
 		var _tempListSize	=	this.state.msgKeyList.size;
 		for(var index = 0 ; index < _tempListSize ; index++){
@@ -145,6 +139,7 @@ class GuestBook extends Component{
 			console.log("포스트를 가져오는 과정에서 에러가 발생했습니다.")
 		}
 	}
+	
 	msgRenderer( msg, key ){
 		return (
 				<div className="msgCoupler" key={key}>
@@ -164,11 +159,17 @@ class GuestBook extends Component{
 							<div className="guestBookUserRegDate">
 								<p className="w3-small"> {msg.regDate} </p>
 							</div>
-							<div	className="guestBookUserReply">
+							<WriteReplyMsg
+								user_msgId	= 	{msg.user_msgId}
+								refreshPage	=	{this.refreshPage}
+							>
+							</WriteReplyMsg>
+							{/* <div	className	=	"guestBookUserReply">
 								<i 	className="im im-plus-circle guestBookUserReply_icon" 
-									title={msg.user_msgId}>
+									title={msg.user_msgId}
+								>
 								</i>
-							</div>
+							</div> */}
 						</div>
 					</div>
 					{
@@ -204,12 +205,7 @@ class GuestBook extends Component{
 			);
 		}
 	}
-	writeMsg(){
-
-	}
-	writeReplyMsg(){
-
-	}
+	
 	render(){
 		console.log("guestbook.render >>> this.state.msgList : ",this.state.msgList);
 		for(var i = 0 ; i < this.state.msgList.size ; i++){

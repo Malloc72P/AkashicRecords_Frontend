@@ -2,6 +2,7 @@ import	React, { Component }	from	'react';
 import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
 import	{ List }				from	'immutable';
+import	{ Link }				from	'react-router-dom';
 import	SeriesWritePagePwChecker		from	'./../../../popupComponent/pwChecker/SeriesWritePagePwChecker';
 
 import './subSectionCSS/Series.css';
@@ -106,9 +107,10 @@ class Series extends Component{
 					<div className="w3-bar-item">
 						<h5>{/* ${ seriesCount }  */}시리즈</h5>
 					</div>
-					<SeriesWritePagePwChecker>
-						
-					</SeriesWritePagePwChecker>
+					<Link 	to="/mainPage/writeSeries"
+							className="w3-right w3-bar-item w3-button w3-mobile" href="#">
+						<h5>시리즈 추가</h5>
+					</Link>
 				</div>
 				
 				{/* 시리즈 컨텐츠 */}
