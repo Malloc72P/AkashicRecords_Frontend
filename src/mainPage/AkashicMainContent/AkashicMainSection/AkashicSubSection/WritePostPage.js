@@ -2,7 +2,7 @@ import	React, { Component } 	from	'react';
 import	axios 					from	'axios';
 import	myUtil 					from	'./../../../../util/myUtil'
 import	{Editor}				from	'@tinymce/tinymce-react';
-
+import	$						from	'jquery';
 class WritePostPage extends Component{
 
 	constructor(props){
@@ -131,47 +131,86 @@ class WritePostPage extends Component{
 		console.log(" writePost >>> this.state.seriesId : ",this.state.seriesId);
 		console.log(" writePost >>> this.state.contentVal : ",this.state.contentVal);
 		console.log(" writePost >>> this.state.validAccess : ",this.state.validAccess);
+		
 		if(this.state.validAccess === true){
-			axios.get( new myUtil().serverUrl+"writePostProc.do", {
-				params	:	{
-					ssnId			:	_ssnId,
-					post_title		:	this.state.title,
-					post_content	:	this.state.contentVal,
-					series_id		:	this.state.seriesId
-				}
-			})
-			.then( (response)=>{
-				   console.log("writePost >>> response : ",response.data);
-				   var checker = response.data.insertChecker;
-				   if( checker === "true" ){
-					   alert("성공적으로 저장되었습니다");
-					   this.goBack();
-				   }
-				   else if( checker === "false" ){
-					   alert("저장에 실패하였습니다!");
-				   }
-				   else if( checker === "invalidSession" ){
-					   alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-					   this.goBack();
-				   }
-				   else if( checker === "lowAuthorize" ){
-					   alert("권한이 없습니다!");
-					   this.goBack();
-				   }
-				   else if( checker === "noArgument" ){
-					   alert("모든 입력란에 작성해주세요.");
-				   }
-				   else{
-					   alert("에러가 발생했습니다.");
-					   this.goBack();
-				   }
+					$.ajax( 
+						{
+							method : "post",
+							url    : new myUtil().serverUrl+"writePostProc.do",
+							data   : { 
+										ssnId			:	_ssnId,
+										post_title		:	this.state.title,
+										post_content	:	this.state.contentVal,
+										series_id		:	this.state.seriesId
+							},
+							success : (result) => {
+								console.log("writePost >>> response : ",result);
+								var jsonRes = JSON.parse(result)
+								var checker = jsonRes.insertChecker;
+								console.log("writePost >>> checker : ",checker);
+								if( checker === "true" ){
+									alert("성공적으로 저장되었습니다");
+									this.goBack();
+								}
+								else if( checker === "false" ){
+									alert("저장에 실패하였습니다!");
+								}
+								else if( checker === "invalidSession" ){
+									alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+									this.goBack();
+								}
+								else if( checker === "lowAuthorize" ){
+									alert("권한이 없습니다!");
+									this.goBack();
+								}
+								else if( checker === "noArgument" ){
+									alert("모든 입력란에 작성해주세요.");
+								}
+								else{
+									alert("에러가 발생했습니다.");
+									this.goBack();
+								}
+							}//success
+						}//ajax {}
+					)//.ajax
+			// axios.post( new myUtil().serverUrl+"writePostProc.do", {
+			// 		ssnId			:	_ssnId,
+			// 		post_title		:	this.state.title,
+			// 		post_content	:	this.state.contentVal,
+			// 		series_id		:	this.state.seriesId
+			// })
+			// .then( (response)=>{
+			// 	   console.log("writePost >>> response : ",response.data);
+			// 	   var checker = response.data.insertChecker;
+			// 	   if( checker === "true" ){
+			// 		   alert("성공적으로 저장되었습니다");
+			// 		   this.goBack();
+			// 	   }
+			// 	   else if( checker === "false" ){
+			// 		   alert("저장에 실패하였습니다!");
+			// 	   }
+			// 	   else if( checker === "invalidSession" ){
+			// 		   alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+			// 		   this.goBack();
+			// 	   }
+			// 	   else if( checker === "lowAuthorize" ){
+			// 		   alert("권한이 없습니다!");
+			// 		   this.goBack();
+			// 	   }
+			// 	   else if( checker === "noArgument" ){
+			// 		   alert("모든 입력란에 작성해주세요.");
+			// 	   }
+			// 	   else{
+			// 		   alert("에러가 발생했습니다.");
+			// 		   this.goBack();
+			// 	   }
 	   
-			   })
-			   .catch( (error)=>{
-				   console.log("writeSeries >>> error : ",error);
-				   alert("에러가 발생했습니다.");
-					   this.goBack();
-			   })
+			//    })
+			//    .catch( (error)=>{
+			// 	   console.log("writeSeries >>> error : ",error);
+			// 	   alert("에러가 발생했습니다.");
+			// 		   this.goBack();
+			//    })
 		}
 
 		
