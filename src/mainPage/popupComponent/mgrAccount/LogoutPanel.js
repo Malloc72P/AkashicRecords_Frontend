@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './../popupOverrider.css';
 import axios    from    "axios";
-import  $                       from    'jquery';
 import myUtil  from './../../../util/myUtil';
 class LogoutPanel extends Component{
     constructor(props){

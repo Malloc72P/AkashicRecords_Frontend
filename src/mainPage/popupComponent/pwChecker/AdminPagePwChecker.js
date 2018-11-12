@@ -33,10 +33,10 @@ class AdminPagePwChecker extends Component{
             console.log("response : ",response);
             var res = response.data;
             
-            if(res.validator === "true" && res.validator === "true"){
+            if(res.validator === "true" && res.activation === "true"){
                this.setState({
-                    adminPageBtn   :   false,
-                    pwBtn       :   true
+                    adminPageBtn    :   false,
+                    pwBtn           :   true
                });
                console.log(this.state);
             }

@@ -1,6 +1,5 @@
 import  React, { Component }    from    'react';
 import  Popup                   from    "reactjs-popup";
-import  axios                   from    'axios';
 import  myUtil                  from    './../../../util/myUtil'
 import  $                       from    'jquery';
 import  './css/RegisterPanel.css';
@@ -201,7 +200,7 @@ class MyPagePanel extends Component{
                                                                                         onChange={this.setNickname}></input>
 
                 <br></br>
-                <input className="w3-btn  btnMargin btnBorderBottom" type ="button" value="회원가입"
+                <input className="w3-btn  btnMargin btnBorderBottom" type ="button" value="수정하기"
                                                                     onClick={()=>this.registerProc(close)}>
                 </input>
                     

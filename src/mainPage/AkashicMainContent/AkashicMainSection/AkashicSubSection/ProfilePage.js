@@ -34,9 +34,9 @@ class ProfilePage extends Component{
 					<div className="w3-bar-item">
 						<h5>AkashicRecords</h5>
 					</div>
-					<button className="w3-right w3-bar-item w3-button w3-mobile">
+					{/* <button className="w3-right w3-bar-item w3-button w3-mobile">
 						<h5>프로필 수정</h5>
-					</button>
+					</button> */}
 				</div>
 				<div className="w3-leftbar cl_div_profileSection w3-white w3-card w3-container">
 					<div className="w3-container cl_div_profileHeader">

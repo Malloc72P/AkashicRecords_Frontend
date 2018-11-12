@@ -3,7 +3,7 @@ import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
 import	{ List }				from	'immutable';
 import	{ Link }				from	'react-router-dom';
-import	SeriesWritePagePwChecker		from	'./../../../popupComponent/pwChecker/SeriesWritePagePwChecker';
+import	Hotkeys 				from	'react-hot-keys';
 
 import './subSectionCSS/Series.css';
 class Series extends Component{
@@ -12,14 +12,18 @@ class Series extends Component{
 		super(props);
 		this.funcIndex	=	2;
 		this.state	=	{
+			hideDelBtn		:	"none",
 			seriesCount		:	0,
 			seriesKeyIndex	:	0,
 			seriesListKey	:	new List(),
-			seriesList		:	new List( [] )
+			seriesList		:	new List( )
 		}
 		console.log("Series.constructor >>> 메서드 호출됨");
 		this.props.setCurrSec(this.funcIndex);
 		this.seriesRenderer	=	this.seriesRenderer.bind(this);
+		// this.onKeyDownHandler	=	this.onKeyDownHandler.bind(this);
+		// this.onKeyUpHandler	=	this.onKeyUpHandler.bind(this);
+		
 	}
 	componentWillMount(){
 		axios.get( new myUtil().serverUrl+"postList.do")
@@ -32,13 +36,9 @@ class Series extends Component{
 			   var tempArr	=	response.data.seriesList;
 			   for(var i = 0 ; i < tempArr.length ; i++){
 					console.log("series >>> temparr.item["+i+"]",tempArr[i]);
-					var tempObj	=	this.seriesRenderer( tempArr[i], this.state.seriesKeyIndex );
+					//var tempObj	=	this.seriesRenderer( tempArr[i], this.state.seriesKeyIndex );
 					this.setState({
-						seriesListKey	:	this.state.seriesListKey.push( this.state.seriesKeyIndex ),
-						seriesList		:	this.state.seriesList.push( tempObj )
-					})
-					this.setState({
-						seriesKeyIndex	:	this.state.seriesKeyIndex + 1
+						seriesList		:	this.state.seriesList.push( tempArr[i] )
 					})
 			   }
 			   
@@ -79,11 +79,27 @@ class Series extends Component{
 							{series.regDate}
 						</div>
 					</div>
+					<div className="postList-deleters" style={{ display: this.state.hideDelBtn }}>
+						<i style={{fontSize : "36px", padding : 0}}class="im im-x-mark-circle"></i>
+					</div>
 				</div>
 			</div>
 		);
 	}
-
+	onKeyDownHandler(keyName, e, handle){
+		console.log("key downed");
+		console.log("series onKeyDown >>> e : ",e);
+		this.setState({
+			hideDelBtn	:	"block"
+		})
+	}
+	onKeyUpHandler(keyName, e, handle){
+		console.log("key upped");
+		console.log("series onKeyUpHandler >>> e : ",e);
+		this.setState({
+			hideDelBtn	:	"none"
+		})
+	}
 	render(){
 		console.log("series >>> render() ",this.state.seriesList);
 		for(var i = 0 ; i < this.state.seriesList.size ; i++){
@@ -101,22 +117,31 @@ class Series extends Component{
 			)
 		}
 		return(
-			<div>
-				{/* 시리즈 헤더 */}
-				<div className="w3-card w3-bar" style={{marginBottom: "40px"}} >
-					<div className="w3-bar-item">
-						<h5>{/* ${ seriesCount }  */}시리즈</h5>
+			<Hotkeys
+				keyName		=	"control+alt+d"
+				onKeyDown	=	{this.onKeyDownHandler.bind(this)}
+				onKeyUp		=	{this.onKeyUpHandler.bind(this)}
+			>
+				<div>
+					{/* 시리즈 헤더 */}
+					<div className="w3-card w3-bar" style={{marginBottom: "40px"}} >
+						<div className="w3-bar-item">
+							<h5>{/* ${ seriesCount }  */}시리즈</h5>
+						</div>
+						<Link 	to="/mainPage/writeSeries"
+								className="w3-right w3-bar-item w3-button w3-mobile" href="#">
+							<h5>시리즈 추가</h5>
+						</Link>
 					</div>
-					<Link 	to="/mainPage/writeSeries"
-							className="w3-right w3-bar-item w3-button w3-mobile" href="#">
-						<h5>시리즈 추가</h5>
-					</Link>
+					
+					{/* 시리즈 컨텐츠 */}
+					{this.state.seriesList.map(( item, i )=>{
+						return this.seriesRenderer( item, i );
+					} )}
+					
 				</div>
-				
-				{/* 시리즈 컨텐츠 */}
-				{this.state.seriesList}
-				
-			</div>
+			</Hotkeys>
+			
 		);
 	}
 }

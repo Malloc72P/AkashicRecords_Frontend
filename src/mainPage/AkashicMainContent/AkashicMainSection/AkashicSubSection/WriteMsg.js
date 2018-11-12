@@ -1,5 +1,4 @@
 import	React, { Component } 	from	'react';
-import	axios 					from	'axios';
 import 	Popup from "reactjs-popup";
 import	myUtil 					from	'./../../../../util/myUtil';
 import { withRouter } 			from	'react-router-dom'
