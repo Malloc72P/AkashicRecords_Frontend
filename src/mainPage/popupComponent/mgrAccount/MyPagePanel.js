@@ -2,7 +2,7 @@ import  React, { Component }    from    'react';
 import  Popup                   from    "reactjs-popup";
 import  axios                   from    'axios';
 import  myUtil                  from    './../../../util/myUtil'
-
+import  $                       from    'jquery';
 import  './css/RegisterPanel.css';
 class MyPagePanel extends Component{
 //<button className="w3-bar-item w3-button">Login</button>
@@ -101,33 +101,33 @@ class MyPagePanel extends Component{
     //### 회원가입 데이터 전송 메서드 ###
        
     registerProc = (close) => {
-        
-        axios.get(new myUtil().serverUrl+"registerProc.do",{
-			params : {
-                ssnId       :   localStorage.ssnId,
-                pw1         :   this.state.password1,
-                pw2         :   this.state.password1,
-                pw3         :   this.state.password1,
-                nickname    :   this.state.nickname,
-                profImg     :   this.state.img_id
-			}
-		})
-		.then( (response)=>{
-            console.log("response : ",response);
-            if( response.data.updateChecker === "true" ){
-                alert("정보 수정이 완료되었습니다");
-                this.props.toggleSidebar();
-                close();
-            }
-            else{
-                alert("정보수정에 실패했습니다.");
-            }
-            
-		})
-		.catch((error)=>{
-            console.log("error : ",error);
-            alert("정보수정에 실패했습니다");
-		})
+        $.ajax( 
+			{
+				method : "post",
+				url    : new myUtil().serverUrl+"myPageProc.do",
+				data   : { 
+					ssnId       :   localStorage.ssnId,
+                    pw1         :   this.state.password1,
+                    pw2         :   this.state.password1,
+                    pw3         :   this.state.password1,
+                    nickname    :   this.state.nickname,
+                    profImg     :   this.state.img_id
+				},
+				success : (result) => {
+					console.log("myPage >>> response : ",result);
+					var jsonRes = JSON.parse(result)
+					var checker = jsonRes.updateChecker;
+					console.log("myPage >>> checker : ",checker);
+					if( checker === "true" ){
+                        alert("정보 수정이 완료되었습니다");
+                        close();
+                    }
+                    else{
+                        alert("정보수정에 실패했습니다.");
+                    }
+				}//success()
+			}//ajax {}
+		)//.ajax()
     }
     //###___________________________###
 

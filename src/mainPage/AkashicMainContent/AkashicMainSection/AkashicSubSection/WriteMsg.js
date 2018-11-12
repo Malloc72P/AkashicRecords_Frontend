@@ -3,7 +3,7 @@ import	axios 					from	'axios';
 import 	Popup from "reactjs-popup";
 import	myUtil 					from	'./../../../../util/myUtil';
 import { withRouter } 			from	'react-router-dom'
-
+import	$						from	'jquery';
 class WriteMsg extends Component{
 
 	constructor(props){
@@ -34,36 +34,34 @@ class WriteMsg extends Component{
 	submitMsg = (close, historyMgr) =>{
 		var _ssnId		=	localStorage.getItem("ssnId");
 		console.log(" writeMsg >>> _ssnId : ",_ssnId);
-
-		axios.get( new myUtil().serverUrl+"guestBookProc.do", {
-			params	:	{
-				ssnId			:	_ssnId,
-				gbMsg			:	this.state.msgContent
-			}
-		})
-        .then( (response)=>{
-			   console.log("writeMsg >>> response : ",response.data);
-			   if(response.data.insertChecker === "true"){
-					alert("저장되었습니다");
-					this.props.refreshPage();
-					close();
-					
-					
-			   }
-			   else if(response.data.insertChecker === "sessionInvalid"){
-				   alert("세션이 만료되었습니다. 로그인해주시기 바랍니다.");
-				   
-				   close();
-			   }
-			   else{
-				   alert("저장에 실패하였습니다");
-			   }
-        })
-        .catch( (error)=>{
-			console.log("writeMsg >>> error : ",error);
-			alert("저장에 실패하였습니다");
-        })
-
+		$.ajax( 
+			{
+				method : "post",
+				url    : new myUtil().serverUrl+"guestBookProc.do",
+				data   : { 
+					ssnId			:	_ssnId,
+					gbMsg			:	this.state.msgContent
+				},
+				success : (result) => {
+					console.log("writeMsg >>> response : ",result);
+					var jsonRes = JSON.parse(result)
+					var checker = jsonRes.insertChecker;
+					console.log("writeMsg >>> checker : ",checker);
+					if(checker === "true"){
+						alert("저장되었습니다");
+						this.props.refreshPage();
+						close();
+				   	}
+				   	else if(checker === "sessionInvalid"){
+					   alert("세션이 만료되었습니다. 로그인해주시기 바랍니다.");
+					   close();
+				   	}
+				   	else{
+					   alert("저장에 실패하였습니다");
+				   	}
+				}//success()
+			}//ajax {}
+		)//.ajax()
 	}
 	
 	render(){

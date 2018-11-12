@@ -9,7 +9,7 @@
     }
     .regPanelWrapper {
         width: 74% !important;
-        height: 86%;
+        /* height: 86%; */
         overflow-y: auto;
     }
     .pwCheckPanel{

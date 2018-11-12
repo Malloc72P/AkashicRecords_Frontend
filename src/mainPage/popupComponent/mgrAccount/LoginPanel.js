@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import Popup from "reactjs-popup";
-import './../popupOverrider.css';
-import axios    from    "axios";
-import myUtil  from './../../../util/myUtil';
+import  React, { Component }    from 'react';
+import  Popup                   from "reactjs-popup";
+import  axios                   from    "axios";
+import  myUtil                  from './../../../util/myUtil';
+import  $                       from    'jquery';
 
-
+import  './../popupOverrider.css';
 class LoginPanel extends Component{
 
     constructor(props){
@@ -32,26 +32,32 @@ class LoginPanel extends Component{
     }
 
     submitLoginData = (close) => {
-        axios.get( new myUtil().serverUrl+"loginProc.do",{
-            params:{
-                email       :   this.state.email
-                ,password   :   this.state.password
-            }
-        })
-        .then( (response)=>{
-           console.log("response : ",response);
-            localStorage.ssnId  =   response.data.ssnId;
-            this.props.setSidebarMode(response.data.loginChecker, response.data.adminCheck);
-            this.props.setLoginStatus(response.data.loginChecker, response.data.adminCheck, response.data.email);
-            this.props.toggleSidebar();
+        $.ajax( 
+            {
+                method : "post",
+                url    : new myUtil().serverUrl+"loginProc.do",
+                data   : { 
+                    email       :   this.state.email,
+                    password    :   this.state.password
+                },
+                success : (result) => {
+                    console.log("myPage >>> response : ",result);
+                    var jsonRes = JSON.parse(result)
+                    var checker = jsonRes.loginChecker;
+                    console.log("myPage >>> checker : ",checker);
+                    if( checker === "true" ){
+                        localStorage.ssnId  =   jsonRes.ssnId;
+                        this.props.setSidebarMode(checker, jsonRes.adminCheck);
+                        this.props.setLoginStatus(checker, jsonRes.adminCheck, jsonRes.email);
 
-            close();
-        })
-        .catch( (error)=>{
-            console.log("error : ",error);
-            alert("로그인에 실패했습니다.");
-            this.props.toggleSidebar();
-        })
+                        close();
+                    }
+                    else{
+                        alert("로그인에 실패했습니다.");
+                    }
+                }//success()
+            }//ajax {}
+        )//.ajax()
     }
     
     
