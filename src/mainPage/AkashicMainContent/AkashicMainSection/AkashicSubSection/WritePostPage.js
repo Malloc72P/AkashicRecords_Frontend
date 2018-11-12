@@ -2,7 +2,8 @@ import	React, { Component } 	from	'react';
 import	axios 					from	'axios';
 import	myUtil 					from	'./../../../../util/myUtil'
 import	{Editor}				from	'@tinymce/tinymce-react';
-
+import	{List}					from	'immutable';
+import	$						from	'jquery';
 class WritePostPage extends Component{
 
 	constructor(props){
@@ -12,7 +13,8 @@ class WritePostPage extends Component{
 			validAccess	:	false,
 			title		:	"",
 			contentVal	:	"",
-			seriesId		:	0,
+			seriesId	:	0,
+			seriesList	:	new	List( ),
 			editorMap	:	new Map( )
 		}
 		console.log("WritePostPage.constructor >>> 메서드 호출됨");
@@ -22,8 +24,27 @@ class WritePostPage extends Component{
 		this.setTitle		=	this.setTitle.bind(this);
 		this.goBack			=	this.goBack.bind(this);
 		this.submitPost		=	this.submitPost.bind(this);
+		this.seriesListRenderer	=	this.seriesListRenderer.bind(this);
 	}
 	componentWillMount(){
+		$.ajax( 
+			{
+				method : "get",
+				url    : new myUtil().serverUrl+"postList.do",
+				success : (result) => {
+					//console.log("writePost getPostList >>> result : ",result);
+					var jsonRes = JSON.parse(result)
+					console.log("writePost getPostList >>> jsonRes : ",jsonRes);
+					for(var i = 0 ; i < jsonRes.seriesList.length ; i++){
+						console.log("writePost getPostList >>> item["+i+"] : ",jsonRes.seriesList[i]);
+						this.setState({
+						 	seriesList	:	this.state.seriesList.push( this.seriesListRenderer( jsonRes.seriesList[i] ) )
+						})
+					}
+					console.log("writePost getPostList >>> this.state.seriesList : ",this.state.seriesList);
+				}//success()
+			}//ajax {}
+		)//.ajax()
 		axios.get( new myUtil().serverUrl+"writePost.do", {
 			params	:	{
 				ssnId			:	localStorage.ssnId
@@ -131,51 +152,54 @@ class WritePostPage extends Component{
 		console.log(" writePost >>> this.state.seriesId : ",this.state.seriesId);
 		console.log(" writePost >>> this.state.contentVal : ",this.state.contentVal);
 		console.log(" writePost >>> this.state.validAccess : ",this.state.validAccess);
-		if(this.state.validAccess === true){
-			axios.get( new myUtil().serverUrl+"writePostProc.do", {
-				params	:	{
-					ssnId			:	_ssnId,
-					post_title		:	this.state.title,
-					post_content	:	this.state.contentVal,
-					series_id		:	this.state.seriesId
-				}
-			})
-			.then( (response)=>{
-				   console.log("writePost >>> response : ",response.data);
-				   var checker = response.data.insertChecker;
-				   if( checker === "true" ){
-					   alert("성공적으로 저장되었습니다");
-					   this.goBack();
-				   }
-				   else if( checker === "false" ){
-					   alert("저장에 실패하였습니다!");
-				   }
-				   else if( checker === "invalidSession" ){
-					   alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-					   this.goBack();
-				   }
-				   else if( checker === "lowAuthorize" ){
-					   alert("권한이 없습니다!");
-					   this.goBack();
-				   }
-				   else if( checker === "noArgument" ){
-					   alert("모든 입력란에 작성해주세요.");
-				   }
-				   else{
-					   alert("에러가 발생했습니다.");
-					   this.goBack();
-				   }
-	   
-			   })
-			   .catch( (error)=>{
-				   console.log("writeSeries >>> error : ",error);
-				   alert("에러가 발생했습니다.");
-					   this.goBack();
-			   })
-		}
-
 		
-
+		if(this.state.validAccess === true){
+			$.ajax( 
+				{
+					method : "post",
+					url    : new myUtil().serverUrl+"writePostProc.do",
+					data   : { 
+								ssnId			:	_ssnId,
+								post_title		:	this.state.title,
+								post_content	:	this.state.contentVal,
+								series_id		:	this.state.seriesId
+					},
+					success : (result) => {
+						console.log("writePost >>> response : ",result);
+						var jsonRes = JSON.parse(result)
+						var checker = jsonRes.insertChecker;
+						console.log("writePost >>> checker : ",checker);
+						if( checker === "true" ){
+							alert("성공적으로 저장되었습니다");
+							this.goBack();
+						}
+						else if( checker === "false" ){
+							alert("저장에 실패하였습니다!");
+						}
+						else if( checker === "invalidSession" ){
+							alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+							this.goBack();
+						}
+						else if( checker === "lowAuthorize" ){
+							alert("권한이 없습니다!");
+							this.goBack();
+						}
+						else if( checker === "noArgument" ){
+							alert("모든 입력란에 작성해주세요.");
+						}
+						else{
+							alert("에러가 발생했습니다.");
+							this.goBack();
+						}
+					}//success()
+				}//ajax {}
+			)//.ajax()
+		}//if(this.state.validAccess === true){
+	}//submitPost()
+	seriesListRenderer(series){
+		return(
+			<option key={series.seriesId} value={series.seriesId}>{series.title}</option>
+		);
 	}
 	render(){
 		var	boldText	=	{
@@ -208,10 +232,13 @@ class WritePostPage extends Component{
 								className	=	"w3-select w3-border w3-round-large"
 								type		=	"text">
 							<option value="0" disabled >포스트가 등록될 시리즈를 선택해 주세요</option>
-							<option value="1">일상</option>
+							{
+								this.state.seriesList
+							}
+							{/* <option value="1">일상</option>
 							<option value="2">음식</option>
 							<option value="3">ICT</option>
-							<option value="4">게임</option>
+							<option value="4">게임</option> */}
 						</select>
 						<br/>
 						<br/>

@@ -1,7 +1,7 @@
 import	React, { Component } 	from	'react';
 import	axios 					from	'axios';
 import	myUtil 					from	'./../../../../util/myUtil'
-
+import	$						from	'jquery';
 class WriteSeriesPage extends Component{
 
 	constructor(props){
@@ -57,46 +57,44 @@ class WriteSeriesPage extends Component{
 	submitSeries(){
 		var _ssnId		=	localStorage.getItem("ssnId");
 		console.log(" writeSeries >>> _ssnId : ",_ssnId);
-
-		axios.get( new myUtil().serverUrl+"writeSeriesProc.do", {
-			params	:	{
-				ssnId			:	_ssnId,
-				seriesTitle		:	this.state.seriesName
-			}
-		})
-        .then( (response)=>{
-			console.log("writeSeries >>> response : ",response.data);
-			var checker = response.data.insertChecker;
-			if( checker === "true" ){
-				alert("성공적으로 저장되었습니다");
-				this.goBack();
-			}
-			else if( checker === "false" ){
-				alert("저장에 실패하였습니다!");
-			}
-			else if( checker === "invalidSession" ){
-				alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-				this.goBack();
-			}
-			else if( checker === "lowAuthorize" ){
-				alert("권한이 없습니다!");
-				this.goBack();
-			}
-			else if( checker === "noArgument" ){
-				alert("모든 입력란에 작성해주세요.");
-			}
-			else{
-				alert("에러가 발생했습니다.");
-				this.goBack();
-			}
-
-        })
-        .catch( (error)=>{
-			console.log("writeSeries >>> error : ",error);
-			alert("에러가 발생했습니다.");
-				this.goBack();
-        })
-
+		$.ajax( 
+			{
+				method : "post",
+				url    : new myUtil().serverUrl+"writeSeriesProc.do",
+				data   : { 
+					ssnId			:	_ssnId,
+					seriesTitle		:	this.state.seriesName
+				},
+				success : (result) => {
+					console.log("writeSeries >>> response : ",result);
+					var jsonRes = JSON.parse(result)
+					var checker = jsonRes.insertChecker;
+					console.log("writeSeries >>> checker : ",checker);
+					if( checker === "true" ){
+						alert("성공적으로 저장되었습니다");
+						this.goBack();
+					}
+					else if( checker === "false" ){
+						alert("저장에 실패하였습니다!");
+					}
+					else if( checker === "invalidSession" ){
+						alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+						this.goBack();
+					}
+					else if( checker === "lowAuthorize" ){
+						alert("권한이 없습니다!");
+						this.goBack();
+					}
+					else if( checker === "noArgument" ){
+						alert("모든 입력란에 작성해주세요.");
+					}
+					else{
+						alert("에러가 발생했습니다.");
+						this.goBack();
+					}
+				}//success()
+			}//ajax {}
+		)//.ajax()
 	}
 	render(){
 		var	boldText	=	{

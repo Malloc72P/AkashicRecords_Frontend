@@ -39,3 +39,15 @@
     padding-left: 3px;
     padding-right: 3px;
 }
+.postList-deleters{
+    float: right;
+    top: -80px;
+    right: -32px;
+    position: relative;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    opacity: 0.6;
+}
+.postList-deleters:hover{
+    opacity: 1;
+}

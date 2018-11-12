@@ -3,7 +3,6 @@ import	axios						from    "axios";
 import	myUtil						from 	'./../../../../util/myUtil';
 import	{ List }					from	'immutable';
 import  {Link}    					from    'react-router-dom';
-import	WritePostPagePwChecker		from	'./../../../popupComponent/pwChecker/WritePostPagePwChecker';
 class RecentPosts extends Component{
 
 	constructor(props){

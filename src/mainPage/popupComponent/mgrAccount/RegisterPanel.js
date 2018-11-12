@@ -1,8 +1,7 @@
 import  React, { Component }    from    'react';
 import  Popup                   from    "reactjs-popup";
-import  axios                   from    'axios';
 import  myUtil                  from    './../../../util/myUtil'
-
+import  $                       from    'jquery';
 import  './css/RegisterPanel.css';
 class RegisterPanel extends Component{
 //<button className="w3-bar-item w3-button">Login</button>
@@ -83,30 +82,31 @@ class RegisterPanel extends Component{
             img_id      :   "",
             img_url     :   ""
         */
-        axios.get(new myUtil().serverUrl+"registerProc.do",{
-			params : {
-                email       :   this.state.email,
-                password    :   this.state.password1,
-                nickname    :   this.state.nickname,
-                profImg     :   this.state.img_id
-			}
-		})
-		.then( (response)=>{
-            console.log("response : ",response);
-            if( response.data.insertChecker === "true" ){
-                alert("회원가입이 완료되었습니다");
-                this.props.toggleSidebar();
-                close();
-            }
-            else{
-                alert("회원가입에 실패했습니다.");
-            }
-            
-		})
-		.catch((error)=>{
-            console.log("error : ",error);
-            alert("회원가입에 실패했습니다");
-		})
+        $.ajax( 
+            {
+                method : "post",
+                url    : new myUtil().serverUrl+"registerProc.do",
+                data   : { 
+                    email       :   this.state.email,
+                    password    :   this.state.password1,
+                    nickname    :   this.state.nickname,
+                    profImg     :   this.state.img_id
+                },
+                success : (result) => {
+                    console.log("register >>> response : ",result);
+                    var jsonRes = JSON.parse(result)
+                    var checker = jsonRes.insertChecker;
+                    console.log("myPage >>> checker : ",checker);
+                    if( checker === "true" ){
+                        alert("회원가입이 완료되었습니다");
+                        close();
+                    }
+                    else{
+                        alert("회원가입에 실패했습니다.");
+                    }
+                }//success()
+            }//ajax {}
+        )//.ajax()
     }
     //###___________________________###
 
