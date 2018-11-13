@@ -54,7 +54,11 @@ class WriteMsg extends Component{
 				   	else if(checker === "sessionInvalid"){
 					   alert("세션이 만료되었습니다. 로그인해주시기 바랍니다.");
 					   close();
-				   	}
+					}
+					else if(checker === "notValidAccount"){
+						alert("계정이 비활성화되어있습니다. 관리자에게 문의하여 활성화하세요.");
+						close();
+					}   
 				   	else{
 					   alert("저장에 실패하였습니다");
 				   	}
