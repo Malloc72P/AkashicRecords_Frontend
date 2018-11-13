@@ -18,12 +18,10 @@ class LogoutPanel extends Component{
             localStorage.removeItem( "ssnId" );
             this.props.setSidebarMode("false", "false");
             this.props.setLoginStatus("false", "false", "noEmail");
-            this.props.toggleSidebar();
         })
         .catch( (error)=>{
             console.log("error : ",error);
             alert("로그아웃에 실패했습니다.");
-            this.props.toggleSidebar();
         })
     }
     render(){

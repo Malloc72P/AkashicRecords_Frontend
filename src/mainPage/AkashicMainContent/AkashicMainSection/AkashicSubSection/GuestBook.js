@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import	axios					from    "axios";
 import	myUtil					from 	'./../../../../util/myUtil';
-import	{ List, update }				from	'immutable';
-import	{ Link }				from	'react-router-dom';
+import	{ List }				from	'immutable';
 import 	WriteMsg 				from 	'./WriteMsg';
 import	WriteReplyMsg			from	'./WriteReplyMsg';
+import	$						from	'jquery';
 
 import	'./subSectionCSS/GuestBook.css'
 
@@ -30,6 +30,8 @@ class GuestBook extends Component{
 		this.getMoreMsg			=	this.getMoreMsg.bind(this);
 		this.refreshPage		=	this.refreshPage.bind(this);
 		this.getFirstMsg		=	this.getFirstMsg.bind(this);
+		this.msgDeleter			=	this.msgDeleter.bind(this);
+		this.replyDeleter		=	this.replyDeleter.bind(this);
 	}
 	componentWillMount(){
 		this.getFirstMsg();
@@ -38,16 +40,9 @@ class GuestBook extends Component{
 		console.log("GuestBook.componentWillUnmount >>> 메서드 호출됨");
 	}
 	refreshPage(){
-		console.log("msgDelete >>> this.state.msgKeyList.size : ",this.state.msgKeyList.size);
-		var _tempListSize	=	this.state.msgKeyList.size;
-		for(var index = 0 ; index < _tempListSize ; index++){
-			console.log("msgDelete >>> ["+index+"]");
-			this.setState({
-				msgList		: 	this.state.msgList.filter( 	  (_, i) => i === index ),
-				msgKeyList	:	this.state.msgKeyList.filter( (_, i) => i === index )
-			})	
-		}
-		
+		this.setState({
+			msgList	:	new List()
+		})	
 		this.setState({
 			pageNum		:	1,
 			msgCount	:	0,
@@ -71,13 +66,8 @@ class GuestBook extends Component{
 				 console.log("guestbook >>> tempArr : ",tempArr);
 				 for( var i = 0 ; i < tempArr.length ; i++ ){
 					// console.log("tempArr["+i+"] : ",tempArr[i]);
-					var tempObj	=	this.msgRenderer( tempArr[i], this.state.msgKeyIndex );
 					this.setState({
-						msgKeyList	:	this.state.msgKeyList.push( this.state.msgKeyIndex ),
-						msgList		:	this.state.msgList.push( tempObj )
-					})
-					this.setState({
-						msgKeyIndex	:	this.state.msgKeyIndex + 1
+						msgList		:	this.state.msgList.push( tempArr[i] )
 					})
 				 }
 				
@@ -106,13 +96,8 @@ class GuestBook extends Component{
 				 console.log("guestbook >>> tempArr : ",tempArr);
 				 for( var i = 0 ; i < tempArr.length ; i++ ){
 					// console.log("tempArr["+i+"] : ",tempArr[i]);
-					var tempObj	=	this.msgRenderer( tempArr[i], this.state.msgKeyIndex );
 					this.setState({
-						msgKeyList	:	this.state.msgKeyList.push( this.state.msgKeyIndex ),
-						msgList		:	this.state.msgList.push( tempObj )
-					})
-					this.setState({
-						msgKeyIndex	:	this.state.msgKeyIndex + 1
+						msgList		:	this.state.msgList.push( tempArr[i] )
 					})
 				 }
 				
@@ -131,15 +116,89 @@ class GuestBook extends Component{
 			   	</div>
 			)  
 		}
-		else if( this.state.currentPage === this.state.pageCount ){
+		else if( this.state.currentPage == this.state.pageCount ){
 			console.log("msgAppender >>> else if( currentPage == pageCount )")
 		}
 		else{
 			console.log("else")
-			console.log("포스트를 가져오는 과정에서 에러가 발생했습니다.")
+			console.log("메세지를 가져오는 과정에서 에러가 발생했습니다.")
+			console.log("currentPage : "+this.state.currentPage);
+			console.log("pageCount : "+this.state.pageCount);
 		}
 	}
-	
+	msgDeleter(msgId){
+		console.log("series.seriesDeleter >>> 메서드 호출됨, \n msgId : "+msgId);
+		$.ajax(
+			{
+				url		:	new myUtil().serverUrl+"deleteMsg.do",
+				data	:	{
+					ssnId		:	localStorage.ssnId,
+					msgId		:	msgId
+				},
+				method	:	"post",
+				success	:	(result) => {
+					console.log("series.seriesDeleter >>> AJAX수신완료");
+					var jsonRes	=	JSON.parse(result);
+					console.log("series.seriesDeleter >>> result : ",jsonRes);
+					if(jsonRes.deleteChecker === "true"){
+						this.refreshPage();
+					}
+					else if(jsonRes.deleteChecker === "false"){
+						alert("시리즈 삭제를 실패했습니다.");
+					}
+					else if(jsonRes.deleteChecker === "invalidSession"){
+						alert("세션이 만료되었습니다. 다시 로그인해주세요");
+					}
+					else if(jsonRes.deleteChecker === "lowAuthorize"){
+						alert("권한이 없습니다...!");
+					}
+					else if(jsonRes.deleteChecker === "notyou"){
+						alert("자신이 작성한 메세지만 삭제할 수 있습니다");
+					}
+					else{
+						alert("에러가 발생했습니다.");
+					}
+				}
+			}
+		)
+	}
+	replyDeleter(msgId, originId){
+		console.log("series.replyDeleter >>> 메서드 호출됨, \n msgId : "+msgId);
+		$.ajax(
+			{
+				url		:	new myUtil().serverUrl+"deleteAdminMsg.do",
+				data	:	{
+					ssnId		:	localStorage.ssnId,
+					msgId		:	msgId,
+					originId	:	originId
+				},
+				method	:	"post",
+				success	:	(result) => {
+					console.log("series.seriesDeleter >>> AJAX수신완료");
+					var jsonRes	=	JSON.parse(result);
+					console.log("series.seriesDeleter >>> result : ",jsonRes);
+					if(jsonRes.deleteChecker === "true"){
+						this.refreshPage();
+					}
+					else if(jsonRes.deleteChecker === "false"){
+						alert("시리즈 삭제를 실패했습니다.");
+					}
+					else if(jsonRes.deleteChecker === "invalidSession"){
+						alert("세션이 만료되었습니다. 다시 로그인해주세요");
+					}
+					else if(jsonRes.deleteChecker === "lowAuthorize"){
+						alert("권한이 없습니다...!");
+					}
+					else if(jsonRes.deleteChecker === "notyou"){
+						alert("자신이 작성한 메세지만 삭제할 수 있습니다");
+					}
+					else{
+						alert("에러가 발생했습니다.");
+					}
+				}
+			}
+		)
+	}
 	msgRenderer( msg, key ){
 		return (
 				<div className="msgCoupler" key={key}>
@@ -157,23 +216,26 @@ class GuestBook extends Component{
 										alt="게스트 프로필 이미지"/>
 							</div>
 							<div className="guestBookUserRegDate">
-								<p className="w3-small"> {msg.regDate} </p>
+								<p className="w3-small"> {msg.user_regDate} </p>
 							</div>
 							<WriteReplyMsg
 								user_msgId	= 	{msg.user_msgId}
 								refreshPage	=	{this.refreshPage}
 							>
 							</WriteReplyMsg>
-							{/* <div	className	=	"guestBookUserReply">
-								<i 	className="im im-plus-circle guestBookUserReply_icon" 
-									title={msg.user_msgId}
+							<div	
+								className	=	"guestBookUserDel"
+								onClick		=	{()=>this.msgDeleter(msg.user_msgId)}
+							>
+								<i 	className="im im-x-mark-circle guestBookUserDel_icon" 
+									title={this.props.user_msgId}
 								>
 								</i>
-							</div> */}
+							</div>
 						</div>
 					</div>
 					{
-						this.replyMsgRenderer(msg.user_replyData)
+						this.replyMsgRenderer(msg.user_replyData, msg.user_msgId)
 					}
 					{/* <c:if test="${ guestMsg.getGb_from_admin_id() != -1 }"> */}
 
@@ -181,7 +243,7 @@ class GuestBook extends Component{
 			
 		);
 	}
-	replyMsgRenderer(msg){
+	replyMsgRenderer(msg, originId){
 		if(msg){
 			return(
 				<div className="adminMsgWrapper">
@@ -200,6 +262,18 @@ class GuestBook extends Component{
 						<div className="guestBookAdminRegDate">
 							<p className="w3-small"> {msg.admin_regDate} </p>
 						</div>
+
+						{/* 어드민 메세지 딜러터 */}
+						<div	
+							className	=	"guestBookAdminDel"
+							onClick		=	{()=>this.replyDeleter(msg.admin_msgId, originId)}
+						>
+							<i 	className="im im-x-mark-circle guestBookAdminDel_icon" 
+								title={this.props.user_msgId}
+							>
+							</i>
+						</div>
+
 					</div>
 				</div>
 			);
@@ -218,10 +292,7 @@ class GuestBook extends Component{
 					<div className="w3-bar-item">
 						<h5>{ this.state.msgCount } 메세지</h5>
 					</div>
-					{/* <button className="w3-right w3-bar-item w3-button w3-mobile"
-							onClick={this.writeMsg}>
-						<h5>방명록 작성</h5>
-					</button> */}
+					
 					<WriteMsg 
 							refreshPage={this.refreshPage}>
 
@@ -231,7 +302,11 @@ class GuestBook extends Component{
 
 				</div>
 				{/* 아카식 방명록 컴포넌트 */}
-				{this.state.msgList}
+				{
+					this.state.msgList.map( (item, i) => {
+						return this.msgRenderer( item, i );
+					})
+				}
 				
 				{/* 아카식 메세지 어펜더 */}
 				{this.msgAppender()}

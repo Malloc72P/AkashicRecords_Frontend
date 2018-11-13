@@ -16,6 +16,7 @@
 .userMsgWrapper{
     display: block;
     width: 100%;
+    margin-bottom: 10px;
 }
 .userMsgWrapper:after{
     display: block;
@@ -155,14 +156,12 @@
 .guestBookProfileName{
     font-weight: 500;
 }
-.guestBook-text{
-    
-}
+
 .guestBookUserReply{
     display: inline-block;
     position: absolute;
-    right: -23px;
-    bottom: -17px;
+    right: -50px;
+    bottom: -13px;
 }
 .guestBookUserReply_icon{
     -webkit-transition-duration: 0.4s; /* Safari */
@@ -173,5 +172,40 @@
 }
 .guestBookUserReply_icon:hover{
 
+    opacity: 1;
+}
+
+/*  */
+.guestBookUserDel{
+    display: inline-block;
+    position: absolute;
+    right: -25px;
+    bottom: -13px;
+}
+.guestBookUserDel_icon{
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.6;
+}
+.guestBookUserDel_icon:hover{
+    opacity: 1;
+}
+
+.guestBookAdminDel{
+    display: inline-block;
+    position: absolute;
+    left: -26px;
+    bottom: -13px;
+}
+.guestBookAdminDel_icon{
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.6;
+}
+.guestBookAdminDel_icon:hover{
     opacity: 1;
 }

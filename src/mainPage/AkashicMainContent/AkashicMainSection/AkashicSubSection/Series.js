@@ -4,6 +4,7 @@ import	myUtil					from 	'./../../../../util/myUtil';
 import	{ List }				from	'immutable';
 import	{ Link }				from	'react-router-dom';
 import	Hotkeys 				from	'react-hot-keys';
+import	$						from	'jquery';
 
 import './subSectionCSS/Series.css';
 class Series extends Component{
@@ -20,12 +21,19 @@ class Series extends Component{
 		}
 		console.log("Series.constructor >>> 메서드 호출됨");
 		this.props.setCurrSec(this.funcIndex);
-		this.seriesRenderer	=	this.seriesRenderer.bind(this);
+		this.seriesRenderer		=	this.seriesRenderer.bind(this);
+		this.seriesDeleter		=	this.seriesDeleter.bind(this);
+		this.getSeriesList		=	this.getSeriesList.bind(this);
+		this.refreshSeriesList	=	this.refreshSeriesList.bind(this);
+		
 		// this.onKeyDownHandler	=	this.onKeyDownHandler.bind(this);
 		// this.onKeyUpHandler	=	this.onKeyUpHandler.bind(this);
 		
 	}
 	componentWillMount(){
+		this.getSeriesList();
+	}
+	getSeriesList(){
 		axios.get( new myUtil().serverUrl+"postList.do")
         .then( (response)=>{
 			   console.log("series >>> response : ",response);
@@ -46,6 +54,21 @@ class Series extends Component{
         .catch( (error)=>{
             console.log("error : ",error);
         })
+	}
+	refreshSeriesList(){
+		var _tempListSize	=	this.state.seriesList.size;
+		for(var index = 0 ; index < _tempListSize ; index++){
+			console.log("msgDelete >>> ["+index+"]");
+			this.setState({
+				seriesList		: 	this.state.seriesList.filter( 	  (_, i) => i === index )
+			})	
+		}
+		
+		this.setState({
+			seriesCount		:	0,
+			seriesKeyIndex	:	0,
+		})
+		this.getSeriesList();
 	}
 	componentWillUnmount(){
 		console.log("Series.componentWillUnmount >>> 메서드 호출됨");
@@ -79,7 +102,9 @@ class Series extends Component{
 							{series.regDate}
 						</div>
 					</div>
-					<div className="postList-deleters" style={{ display: this.state.hideDelBtn }}>
+					<div 	className="postList-deleters" 
+							onClick={ ()=>this.seriesDeleter(series.seriesId) }
+							style={{ display: this.state.hideDelBtn }}>
 						<i style={{fontSize : "36px", padding : 0}}class="im im-x-mark-circle"></i>
 					</div>
 				</div>
@@ -99,6 +124,39 @@ class Series extends Component{
 		this.setState({
 			hideDelBtn	:	"none"
 		})
+	}
+	seriesDeleter(seriesId){
+		console.log("series.seriesDeleter >>> 메서드 호출됨, \n seriesID : "+seriesId);
+		$.ajax(
+			{
+				url		:	new myUtil().serverUrl+"deleteSeries.do",
+				data	:	{
+					ssnId		:	localStorage.ssnId,
+					seriesId	:	seriesId
+				},
+				method	:	"post",
+				success	:	(result) => {
+					console.log("series.seriesDeleter >>> AJAX수신완료");
+					var jsonRes	=	JSON.parse(result);
+					console.log("series.seriesDeleter >>> result : ",jsonRes);
+					if(jsonRes.deleteChecker === "true"){
+						this.refreshSeriesList();
+					}
+					else if(jsonRes.deleteChecker === "false"){
+						alert("시리즈 삭제를 실패했습니다.");
+					}
+					else if(jsonRes.deleteChecker === "invalidSession"){
+						alert("세션이 만료되었습니다. 다시 로그인해주세요");
+					}
+					else if(jsonRes.deleteChecker === "lowAuthorize"){
+						alert("권한이 없습니다...!");
+					}
+					else{
+						alert("에러가 발생했습니다.");
+					}
+				}
+			}
+		)
 	}
 	render(){
 		console.log("series >>> render() ",this.state.seriesList);
