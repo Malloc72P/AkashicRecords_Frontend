@@ -115,9 +115,9 @@ class ViewPostPage extends Component{
 						>
 						</PostDeletePwChecker>
 
-						<button	className=" w3-bar-item w3-button w3-mobile w3-right" style={{marginRight: "31px"}}>
+						{/* <button	className=" w3-bar-item w3-button w3-mobile w3-right" style={{marginRight: "31px"}}>
 							<h5>수정</h5>
-						</button>
+						</button> */}
 					</div>
 				</div>
 		);
