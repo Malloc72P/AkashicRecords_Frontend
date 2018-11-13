@@ -48,6 +48,7 @@ class LoginPanel extends Component{
                         localStorage.ssnId  =   jsonRes.ssnId;
                         this.props.setSidebarMode(checker, jsonRes.adminCheck);
                         this.props.setLoginStatus(checker, jsonRes.adminCheck, jsonRes.email);
+                        localStorage.profileImg =   jsonRes.imgUrl;
 
                         close();
                     }

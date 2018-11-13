@@ -12,8 +12,17 @@ class MainSidebarOpener extends Component{
 			<h3 className="chk-side-on" ><i className="chk-side-on im im-key"></i></h3>
 		);
 		if(this.props.loginChecker === "true"){
+            var profileImgStyle = {
+                width   : 54,
+                height  : 54,
+                borderRadius    :   "50%",
+                padding : 0
+            }
 			sidebarOpener =(
-				<h3 className="chk-side-on w3-bar-item">{this.props.email}</h3>
+                // <h3 className="chk-side-on w3-bar-item">{this.props.email}</h3>
+                <img    style={profileImgStyle}
+                        className="chk-side-on w3-bar-item" 
+                        src={localStorage.profileImg} alt="userProfileImg" />
 			);
 		}
         return(

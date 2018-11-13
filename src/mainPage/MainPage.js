@@ -25,7 +25,8 @@ class MainPage extends Component {
 		//###로그인 체크 상태
 		login_loginChecker	:	'false',
 		login_adminChecker	:	'false',
-		login_user_email	:	'noEmail'
+		login_user_email	:	'noEmail',
+		login_user_img		:	'noImg'
 	};//state
 	console.log(this.state);
 	this.toggleSidebar	=	this.toggleSidebar.bind(this);
@@ -60,7 +61,8 @@ class MainPage extends Component {
 				sidebar_sidebarMode	:	'normal',
 				login_loginChecker	:	'false',
 				login_adminChecker	:	'false',
-				login_user_email	:	'noEmail'
+				login_user_email	:	'noEmail',
+				login_user_img		:	'noImg'
 			})
 
 			localStorage.removeItem("ssnId");
