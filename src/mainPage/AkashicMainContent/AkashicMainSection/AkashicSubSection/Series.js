@@ -165,13 +165,26 @@ class Series extends Component{
 		}
 		if( this.state.seriesCount <= 0 ){
 			return (
-				<table border="1" width="700" cellPadding="0" cellSpacing="0" align="center">
-					<tbody>
-						<tr>
-							<td align="center">블로그에 시리즈가 존재하지 않습니다.</td>
-						</tr>
-					</tbody>
-				</table>
+				<div>
+
+					<div className="w3-card w3-bar" style={{marginBottom: "40px"}} >
+						<div className="w3-bar-item">
+							<h5>{/* ${ seriesCount }  */}시리즈</h5>
+						</div>
+						<Link 	to="/mainPage/writeSeries"
+								className="w3-right w3-bar-item w3-button w3-mobile" href="#">
+							<h5>시리즈 추가</h5>
+						</Link>
+					</div>
+					<table border="1" width="700" cellPadding="0" cellSpacing="0" align="center">
+						<tbody>
+							<tr>
+								<td align="center">블로그에 시리즈가 존재하지 않습니다.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
 			)
 		}
 		return(

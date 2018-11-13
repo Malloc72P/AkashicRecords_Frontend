@@ -156,13 +156,27 @@ class RecentPosts extends Component{
 		}
 		if( this.state.postCount <= 0 ){
 			return (
-				<table border="1" width="700" cellPadding="0" cellSpacing="0" align="center">
-					<tbody>
-						<tr>
-							<td align="center">게시판에 저장된 글이 없습니다.</td>
-						</tr>
-					</tbody>
-				</table>
+				<div>
+					<div className="w3-card w3-bar w3-border"  style={{marginBottom: "40px"}}>
+						<div className="w3-bar-item">
+							<h5>{this.state.postCount} 포스트</h5>
+						</div>
+						
+						<Link 	to="/mainPage/writePost"
+								className="w3-right w3-bar-item w3-button w3-mobile" >
+							<h5>글쓰기</h5>
+						</Link>
+						
+					</div>
+					<table border="1" width="700" cellPadding="0" cellSpacing="0" align="center">
+						<tbody>
+							<tr>
+								<td align="center">게시판에 저장된 글이 없습니다.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				
 			)
 		}
 		return(
